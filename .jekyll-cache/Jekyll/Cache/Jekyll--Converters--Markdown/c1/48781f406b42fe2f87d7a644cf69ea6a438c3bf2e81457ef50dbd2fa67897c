@@ -1,0 +1,5 @@
+I"|<h2 id="what-is-a-point-process">What is a point process?</h2>
+<p>Probabilistic generative models are … of the modern machine learning.
+They allow us to make predictions, find anomalies and learn useful representations of the data.
+Most of the time, applying the generative model involves learning the probability distribution \(p(\bm{x})\) over our data points \(\bm{x}\).</p>
+:ET

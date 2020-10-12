@@ -1,0 +1,211 @@
+I"q,<h2 id="what-is-a-point-process">What is a point process?</h2>
+<p>Probabilistic generative models are the bread and butter of the modern machine learning.
+They allow us to make predictions, find anomalies and learn useful representations of the data.
+Most of the time, applying the generative model involves learning the probability distribution \(p(\bm{x})\) over our data points \(\bm{x}\).</p>
+
+<p>We know what to do if \(\bm{x}\) is a vector in \(\mathbb{R}^D\)
+— simply use a multivariate Gaussian or, if we need something more flexible, our favorite normalizing flow model.
+But what if a single realization of our probabilistic model corresponds to a <em>set</em> of vectors \(\{\bm{x}_1, ..., \bm{x}_N\}\)?
+Even worse, what if both \(N\), the number of the vectors, as well as their locations \(\bm{x}_i\) are random?
+This is not some hypothetical scenario — processes generating such data are abundant in the real world:</p>
+<ul>
+  <li>Transactions generated each day in a financial system</li>
+  <li>Locations of disease outbreaks in a city, recorded each week</li>
+  <li>Times and locations of earthquakes in some geographic region within a year</li>
+</ul>
+
+<p>Point processes provide a framework for modeling and analyzing such data.
+Intuitively, we can think of a point process as a distribution over variable-sized sets of objects.
+Each realization of a point process is a set \(\{\bm{x}_1, \dots, \bm{x}_N\}\) consisting of a random number of <em>points</em> \(\bm{x}_i\) that live in some space \(\mathcal{X}\), hence the name “point process”.</p>
+
+<p>Depending on the choice of the space \(\mathcal{X}\), we distinguish different types of point processes.
+For example, \(\mathcal{X} = \mathbb{R}^D\) (for \(D &gt; 1\)) corresponds to a <em>spatial point process</em>.
+An important</p>
+
+<p>We can think of each object \(\bm{x}_i\) as point in some space \(\mathcal{X}\), hence the name “point process”.</p>
+
+<p>Different … depending on the choice of the space \(\mathcal{X}\).</p>
+
+<p>Temporal point processes (TPP) have a nice structure to them …. 
+the natural ordering of the events imposed by \(\mathbb{R}\) makes it easy to describe the distribution … 
+In contrast, spatial \(\mathcal{X} = \mathbb{R}^D\) (with \(D &gt; 1\)) typically intractable.</p>
+
+<p>The term “point processes” is just a fancy name for probability distributions over variable-sized sets of objects.
+We can think of each element in the set as a <em>point</em> in some space, such as \(\mathbb{R}^D\), hence the name.
+In this post, I will talk about</p>
+
+<p>Temporal point processes are a special case, where the points are located in \(\mathbb{R}_+\), the positive real line.
+We can think of \(\mathbb{R}_+\) as representing the time. 
+The points in a … 
+and of the points \(t_1, t_2, ... \in \mathbb{R}_+\) as a sequence of events that happen one after another.</p>
+
+<p>The theory of temporal point processes was mostly developed near the middle of the 20th century, taking roots in measure theory and stochastic processes.
+For this reason, the notation and jargon used in TPP literature may sound strange and unfamiliar to people with a machine learning background.
+In reality, though, most TPP-related concepts can be easily translated into the familiar language of probabilistic machine learning.
+In this series of blog posts I will try to … the two perspectives</p>
+
+<p>The fundamental concept that you will find in virtually every TPP paper or textbook is the <em>conditional intensity function</em>, commonly denoted as \(\lambda^*(t)\).
+… we can view it from two angles.</p>
+
+<h3 id="the-machine-learning-perspective">The machine learning perspective</h3>
+
+<p>In machine learning, we usually characterize continuous probability distributions by specifying their probability density functions (PDF).</p>
+
+<p>Probability density function \(p_i(t_i \vert \mathcal{H}_{t_{i}})\).</p>
+
+<p>However, there exist other options that might be more useful in certain contexts.</p>
+
+<p>What is the probability that the next event \(t_i\) will happen in the interval \([t, t + dt)\)?</p>
+
+<p>This is not the only way to characterize this distribution.
+For example, we could specify its cumulative distribution function (CDF)
+\(F_i(t_i \vert \mathcal{H}_{t_{i}})\)</p>
+
+<p>Survival function (SF)</p>
+
+<p>Hazard function</p>
+
+<p>Survival analysis.</p>
+
+<!-- Most of the theory was developed in the 60s-70s, ... roots in measure theory so the jargon ... might seem very intimidating at first. They had different goals - establishing theoretical foundations. Now we are facing different challenges - we should change the way we think about TPPs... . 
+
+I this first blog post I will ... that I personally find more intuitive.
+
+Might seem intimidating at first, with lots of jargon, but turns out to be ... much more simple
+
+- Loaded with jargon
+- Information is spread across many sources
+- most existing resources either don't go deep enough or require the reader to have a PhD in measure theory.
+
+The goal of this series of blog posts is to show you that 
+
+In this series of blog posts I will try to summarize what I learned ...  -->
+
+<!-- ### TL;DR -->
+
+<!-- - Temporal point processes are basically autoregressive probabilistic models that define the distribution of discrete events in continuous time.
+- Conditional intensity is one of many equivalent ways to specify a distribution over the event times.
+- Conditional intensity allows us to easily define distributions with properties such as global trend or burstiness. -->
+
+<h3 id="why-do-we-need-tpps">Why do we need TPPs?</h3>
+<p>The most obvious use-case for such models is prediction and forecasting (“When will the next event occur?”, “How many orders will we receive next week?”), but other applications are possible, such as anomaly detection (“Does activity of this user deviate from her normal behavior?”) and understanding the data (“Do events of type A influence events of type B?”).</p>
+
+<p>In this blog post, I will consider a simple scenario (but I will cover the case … in one of the future posts).</p>
+
+<p>Each event corresponds to an arrival time $t_i$.</p>
+
+<p>Temporal point process (TPP) defines a distribution of such event sequences over some interval \([0, T]\).</p>
+
+<p>A realization of a TPP consists of a sequence of increasing arrival times \(0 &lt; t_1 &lt; \dots &lt; t_N &lt; T\). [We usually assume that our TPPs are <em>simple</em>. This means that (1) the number of events $N$ is finite almost surely (=with probability one) and (2) the arrival times $t_i$ are distinct, i.e. $t_i \ne t_j$ for all $i\ne j$.]</p>
+
+<p>The key property of TPPs is that both the number of events $N$ as well their arrival times $t_i$ are random.</p>
+
+<p>we can represent … simply as a sequence of arrival times.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>A natural way to define a distribution over event sequences $(t_1, t_2, t_3, …)$ is by specifying the conditional distributions $p_1(t_1), p_2(t_2</td>
+      <td>t_1), p_3(t_3</td>
+      <td>t_1, t_2), \dots$.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Given</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">arrival_times</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">T</span><span class="p">:</span>
+	<span class="n">t</span> <span class="o">~</span> <span class="n">p_i</span><span class="p">(</span><span class="n">t_i</span> <span class="o">|</span> <span class="n">t_1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">t_</span><span class="p">{</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+	<span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">T</span><span class="p">:</span>
+		<span class="n">arrival_times</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>[Remember,</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>It’s important to remember that depending on the time of the first event $t_1$, we get different conditional distributions $p_2(t_2</td>
+      <td>t_1)$.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Fig: Some TPP realization on interval [0, T].</p>
+
+<p>There exist two ways to look at this problem - machine learning view (autoregressive probabilistic models) and</p>
+
+<h3 id="tpp-as-an-autoregressive-model">TPP as an autoregressive model</h3>
+
+<ul>
+  <li>PDF, CDF and survival function</li>
+  <li>From conditional PDF to the conditional hazard function</li>
+  <li>Stitching together the hazard functions to obtain the conditional intensity</li>
+  <li>Intensity simply as an alternative to the conditional PDFs</li>
+</ul>
+
+<p>Difference between intensity and PDF:</p>
+
+<ul>
+  <li>PDF: I am not at t_{i-1}, what is the probability that the next event will happen in [t + dt)?</li>
+  <li>Survival: I have already got up to t and the event hasn’t happened yet. What is the probability that I will see it in [t + dt)?</li>
+</ul>
+
+<h3 id="tpp-as-a-counting-process">TPP as a counting process</h3>
+
+<p>There is another view</p>
+
+<ul>
+  <li>Intensity as expectation of the counting process</li>
+  <li>Conditional intensity for more general dependencies</li>
+</ul>
+
+<p>Both views are, in fact, equivalent</p>
+
+<h3 id="why-intensity-function">Why intensity function?</h3>
+
+<ul>
+  <li>Easy to specify certain types of dependencies (global trend, self-exciting, self-correcting), especially when we have marks</li>
+  <li>Leads to fast inference and sampling - see Parts 2 &amp; 4</li>
+  <li>Not always they best way to look at things - more in Part 3</li>
+</ul>
+
+<p>Intensity allows to define distributions in a piecewise manner - external event happens and changes</p>
+
+<h3 id="examples-of-tpp-models">Examples of TPP models</h3>
+
+<ul>
+  <li>Inhomogeneous Poisson - global trend</li>
+  <li>Hawkes process - self-exciting</li>
+  <li>Self-correcting process</li>
+</ul>
+
+<p>In the next blog post, I will discuss the many …  –&gt;</p>
+
+<h1 id="references">References</h1>
+
+<ul>
+  <li>ICML 2018 tutorial by Manuel Gomez Rodriguez and Isabel Valera <a href="http://learning.mpi-sws.org/tpp-icml18/">http://learning.mpi-sws.org/tpp-icml18/</a></li>
+  <li>Lecture notes by Jakob Rasmussen <a href="https://arxiv.org/abs/1806.00221">https://arxiv.org/abs/1806.00221</a></li>
+  <li>A tutorial by Marian-Andrei Rizoiu et al. <a href="https://arxiv.org/abs/1708.06401">https://arxiv.org/abs/1708.06401</a></li>
+  <li>A tutorial on Hawkes processes by Caner Turkmen <a href="https://hawkeslib.readthedocs.io/en/latest/tutorial.html">https://hawkeslib.readthedocs.io/en/latest/tutorial.html</a></li>
+</ul>
+
+<p>Text and some other stuff <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>
+and a bit more</p>
+
+<details>
+<summary>This list is hidden</summary>
+What happens here?
+</details>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Hello world <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+:ET
