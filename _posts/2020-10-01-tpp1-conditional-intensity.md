@@ -36,55 +36,78 @@ We can interpret the points in a TPP as events happening in continuous time, and
 
 Figure: Two realizations of a temporal point process on $$[0, T]$$.
 
-TPPs are interesting 
-
-intermittent demand forecasting
-
-
-
-Temporal point processes (TPP) have a nice structure to them .... 
-the natural ordering of the events imposed by $$\mathbb{R}$$ makes it easy to describe the distribution ... 
-... this ... which makes most of them 
-
-
-
-Temporal point processes are a special case, where the points are located in $$\mathbb{R}_+$$, the positive real line.
-We can think of $$\mathbb{R}_+$$ as representing the time. 
-The points in a ... 
-and of the points $$t_1, t_2, ... \in \mathbb{R}_+$$ as a sequence of events that happen one after another.
-
+At first it might seem like TPPs are just a (boring) special case of spatial point processes, but this is not true.
+Because of the ordered structure of the set $$[0, \infty)$$, we can treat TPP realizations (i.e., sets $$\{t_1, \dots, t_N\}$$) as ordered sequences $$\bm{t} = (t_1, \dots, t_N)$$, where $$t_1 < t_2 < \dots < t_N$$.
+Additionally, we typically assume that the arrival time of the event $$t_i$$ is only influenced by the events that happened in the past.
+As we will see in the next section, this makes specifying TPP distributions rather easy.
+In contrast, spatial point processes don't permit such ordering on the events and because of this often have intractable densities.
 
 
 The theory of temporal point processes was mostly developed near the middle of the 20th century, taking roots in measure theory and stochastic processes.
-For this reason, the notation and jargon used in TPP literature may sound strange and unfamiliar to people with a machine learning background.
+For this reason, the notation and jargon used in TPP literature may sound strange and unfamiliar to people with a machine learning background (at least it did to me).
 In reality, though, most TPP-related concepts can be easily translated into the familiar language of probabilistic machine learning.
-In this series of blog posts I will try to ... the two perspectives
-
+In the rest of this post I will talk about these two viewpoints and show that they are equivalent.
 
 The fundamental concept that you will find in virtually every TPP paper or textbook is the *conditional intensity function*, commonly denoted as $$\lambda^*(t)$$.
 ... we can view it from two angles.
 
 
 ### The machine learning perspective
+How do we define a probabilistic model that generates variable-length event sequences $$\bm{t} = (t_1, \dots, t_N)$$ in the interval $$[0, T]$$?
+Thanks to the inherent ordering on the events, we could define our model autoregressively.
+We start by sampling $$t_1$$, the time of the first event, from some probability distribution $$p_1(t_1)$$ that is supported on $$[0, \infty)$$.
+If $$t_1 > T$$, i.e., our event happened outside of the observed interval, we are done -- our realization $$\bm{t}$$ is just an empty sequence.
+Otherwise, we sample the next event $$t_2$$ from the conditional distribution $$p_2(t_2 | t_1)$$ that is supported on $$[t_1, \infty)$$.
+Again, we check if $$t_2 > T$$, and if not, proceed to sample $$t_3$$ from $$p_3(t_3 | t_1, t_2)$$.
+We keep repeating this process until some event falls outside of the observed interval.
 
-In machine learning, we usually characterize continuous probability distributions by specifying their probability density functions (PDF).
-
-Probability density function $$p_i(t_i \vert \mathcal{H}_{t_{i}})$$.
-
-However, there exist other options that might be more useful in certain contexts.
-
-What is the probability that the next event $$t_i$$ will happen in the interval $$[t, t + dt)$$?
-
-This is not the only way to characterize this distribution.
-For example, we could specify its cumulative distribution function (CDF)
-$$F_i(t_i \vert \mathcal{H}_{t_{i}})$$
-
-Survival function (SF)
-
-Hazard function
+At each step we are dealing with the conditional distribution of the event $$t_i$$ given the *history* of the past events $$\mathcal{H}_{t_i} = \{t_j: t_j < t_i\}$$.
+We usually denote this distribution as $$p_i(t_i | \mathcal{H}_{t_i})$$. 
+In the literature, you can also often meet the shorthand notation $$p_i^*(t_i)$$, where the star reminds us of the dependency on the past events.
+The important question is how do we actually describe the probability distribution $$p_i^*(t_i)$$.
 
 
-Survival analysis.
+In machine learning, we usually characterize a continuous probability distribution $$p_i^*$$ by specifying its probability density functions (PDF) $$f_i^*$$.
+Loosely speaking, the value $$f_i^*(t) dt$$ represents the probability that the event $$t_i$$ will happen in the interval $$[t, t + dt)$$, where $$dt$$ is some infinitesimal positive number.
+
+However, there exist other ways to describe a distribution that might be more useful in certain contexts.
+For example, the *cumulative distribution function* (CDF) $$F_i^*(t) = \int_0^{t} f_i^*(u) du$$ tells us the probability that the event $$t_i$$ will happen before $$t$$.
+Closely related is the *survival function* (SF) that is defined as $$S_i^*(t) = 1 - F_i^*(t)$$, which tells us the probability the event $$t_i$$ will happen *after* time $$t$$. 
+
+Figure: PDF, CDF and SF.
+
+
+Finally, the lesser known of them all is the *hazard function* $$h_i^*$$ that can be computed as $$h^*_i(t) = p_i^*(t) / S_i^*(t)$$.
+The value $$h_i^*(t)dt$$ answers the question "What is the probability that the event $$t_i$$ will happen in the interval $$[t, t + dt)$$ given that it didn't happen before $$t$$?".
+To understand why we might be interested in answering such a question, consider the following scenario.
+
+
+If we only know the PDF $$f_i^*$$, we would need to 
+
+
+On the other hand, the survival function allows us to directly compute the quantity of interest.
+
+
+... survival analysis
+
+
+We could specify any of the functions $$f_i^*$$, $$F_i^*$$, $$S_i^*$$ or $$h_i^*$$ (subject to the respective constraints), and each one of them would completely describe our probability distribution $$p_i^*$$.
+Put differently, given one of these functions, we can easily compute the other three.
+
+
+We obtain the *conditional intensity function* by stitching together the hazard functions $$h_i^*$$ of all the distributions.
+
+$$
+\lambda^*(t) =
+\begin{cases}
+h_1^*(t) & \text{ if } 0 \le t < t_1 \\
+h_2^*(t) & \text{ if } t_1 \le t < t_2 \\
+& \vdots\\
+h_{N+1}^*(t) & \text{ if } t_N \le t \\
+\end{cases}
+$$
+
+
 
 
 <!-- Most of the theory was developed in the 60s-70s, ... roots in measure theory so the jargon ... might seem very intimidating at first. They had different goals - establishing theoretical foundations. Now we are facing different challenges - we should change the way we think about TPPs... . 
