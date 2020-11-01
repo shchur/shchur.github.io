@@ -49,50 +49,69 @@ In reality, though, most TPP-related concepts can be easily translated into the 
 In the rest of this post I will talk about these two viewpoints and show that they are equivalent.
 
 The fundamental concept that you will find in virtually every TPP paper or textbook is the *conditional intensity function*, commonly denoted as $$\lambda^*(t)$$.
-... we can view it from two angles.
+We will now look at it from two angles (autoregressive view vs. counting process view) and see how the conditional intensity allows us to specify TPP distributions.
 
 
-### The machine learning perspective
-How do we define a probabilistic model that generates variable-length event sequences $$\bm{t} = (t_1, \dots, t_N)$$ in the interval $$[0, T]$$?
+### TPP as an autoregressive model
+How do we define a probabilistic model that generates variable-length event sequences $$\bm{t} = (t_1, \dots, t_N)$$[^1] in the interval $$[0, T]$$? 
 Thanks to the inherent ordering on the events, we could define our model autoregressively.
 We start by sampling $$t_1$$, the time of the first event, from some probability distribution $$p_1(t_1)$$ that is supported on $$[0, \infty)$$.
-If $$t_1 > T$$, i.e., our event happened outside of the observed interval, we are done -- our realization $$\bm{t}$$ is just an empty sequence.
+If $$t_1 > T$$, i.e., our event happened outside of the observed interval, we are done --- our realization $$\bm{t}$$ is just an empty sequence.
 Otherwise, we sample the next event $$t_2$$ from the conditional distribution $$p_2(t_2 | t_1)$$ that is supported on $$[t_1, \infty)$$.
 Again, we check if $$t_2 > T$$, and if not, proceed to sample $$t_3$$ from $$p_3(t_3 | t_1, t_2)$$.
-We keep repeating this process until some event falls outside of the observed interval.
+We keep repeating this process until some event $$t_{N+1}$$ falls outside of the observed interval, at which point we stop the process and get our sample consisting of $$N$$ events.
 
 At each step we are dealing with the conditional distribution of the event $$t_i$$ given the *history* of the past events $$\mathcal{H}_{t_i} = \{t_j: t_j < t_i\}$$.
 We usually denote this distribution as $$p_i(t_i | \mathcal{H}_{t_i})$$. 
 In the literature, you can also often meet the shorthand notation $$p_i^*(t_i)$$, where the star reminds us of the dependency on the past events.
-The important question is how do we actually describe the probability distribution $$p_i^*(t_i)$$.
+The important question is how to represent the probability distribution $$p_i^*(t_i)$$.
 
 
 In machine learning, we usually characterize a continuous probability distribution $$p_i^*$$ by specifying its probability density functions (PDF) $$f_i^*$$.
 Loosely speaking, the value $$f_i^*(t) dt$$ represents the probability that the event $$t_i$$ will happen in the interval $$[t, t + dt)$$, where $$dt$$ is some infinitesimal positive number.
 
 However, there exist other ways to describe a distribution that might be more useful in certain contexts.
-For example, the *cumulative distribution function* (CDF) $$F_i^*(t) = \int_0^{t} f_i^*(u) du$$ tells us the probability that the event $$t_i$$ will happen before $$t$$.
-Closely related is the *survival function* (SF) that is defined as $$S_i^*(t) = 1 - F_i^*(t)$$, which tells us the probability the event $$t_i$$ will happen *after* time $$t$$. 
+For example, the *cumulative distribution function* (CDF) $$F_i^*(t) = \int_0^{t} f_i^*(u) du$$ tells us the probability that the event $$t_i$$ will happen before time $$t$$.
+Closely related is the *survival function* (SF), defined as $$S_i^*(t) = 1 - F_i^*(t)$$, which tells us the probability the event $$t_i$$ will happen *after* time $$t$$. 
 
 Figure: PDF, CDF and SF.
 
 
-Finally, the lesser known of them all is the *hazard function* $$h_i^*$$ that can be computed as $$h^*_i(t) = p_i^*(t) / S_i^*(t)$$.
+Finally, a lesser known option is the *hazard function* $$h_i^*$$ that can be computed as $$h^*_i(t) = f_i^*(t) / S_i^*(t)$$.
 The value $$h_i^*(t)dt$$ answers the question "What is the probability that the event $$t_i$$ will happen in the interval $$[t, t + dt)$$ given that it didn't happen before $$t$$?".
-To understand why we might be interested in answering such a question, consider the following scenario.
+Let's look at this definition more closely to examine the connection between the PDF $$f_i^*$$ and the hazard function $$h_i^*$$.
 
+Consider the following scenario.
+The most recent event $$t_{i-1}$$ has just happened and our clock is at time $$t_{i-1}$$.
+The value $$f_i^*(t)dt$$ tells us the probability that the next event $$t_i$$ will happen in $$[t, t+ dt)$$.
+Then, some time has elapsed, our clock is now at time $$t$$ and the event $$t_{i}$$ hasn't yet happened.
+At this point in time, $$f_i^*(t)dt$$ is not equal to $$\Pr(t_i \in [t, t + dt) | \mathcal{H}_t)$$ anymore --- we need to condition on the fact that $$t_i$$ didn't happen before $$t$$.
+For this, we renormalize the PDF such that it integrates to $$1$$ over the interval $$[t, \infty)$$.
 
-If we only know the PDF $$f_i^*$$, we would need to 
+$$f_i^*(t | t_i > t) = \frac{f_i^*(t)}{\int_t^\infty f_i^*(u) du} =\frac{f_i^*(t)}{S_i^*(t)} =: h_i^*(t)$$
 
+This value of the renormalized PDF exactly corresponds to the hazard function $$h_i^*$$ at time $$t$$.
+The name "hazard function" comes from the field of survival analysis, where the goal is to predict failures in various systems.
+If $$t_i$$ is the failure time, the quantity $$h_i^*(t)dt$$ corresponds to the probability of a failure --- a hazardous event --- in the immediate future.
 
-On the other hand, the survival function allows us to directly compute the quantity of interest.
-
-
-... survival analysis
-
-
-We could specify any of the functions $$f_i^*$$, $$F_i^*$$, $$S_i^*$$ or $$h_i^*$$ (subject to the respective constraints), and each one of them would completely describe our probability distribution $$p_i^*$$.
+Let's get back to our problem of characterizing the conditional distributions of a TPP.
+We could specify any of the functions $$f_i^*$$, $$F_i^*$$, $$S_i^*$$ or $$h_i^*$$ (subject to the respective constraints), and each one of them would completely describe the distribution $$p_i^*$$.
 Put differently, given one of these functions, we can easily compute the other three.
+In point process literature, we usually consider the hazard function $$h_i^*$$.
+This happens for traditional reasons, but also because hazard functions are often more interpretable and easier to describe when talking about popular simple models.
+
+An extremely important observation
+
+
+In general, for any value of $$t_1$$, the hazard function $$h_2^*$$ can look completely differently.
+Therefore, it only makes sense 
+
+
+
+
+
+
+Let's say we want to compute the likelihood of some realization $$\bm{t} = (t_1, \dots, t_N)$$.
 
 
 We obtain the *conditional intensity function* by stitching together the hazard functions $$h_i^*$$ of all the distributions.
@@ -100,12 +119,21 @@ We obtain the *conditional intensity function* by stitching together the hazard 
 $$
 \lambda^*(t) =
 \begin{cases}
-h_1^*(t) & \text{ if } 0 \le t < t_1 \\
-h_2^*(t) & \text{ if } t_1 \le t < t_2 \\
+h_1^*(t) & \text{ if } 0 \le t \le t_1 \\
+h_2^*(t) & \text{ if } t_1 < t \le t_2 \\
 & \vdots\\
-h_{N+1}^*(t) & \text{ if } t_N \le t \\
+h_{N+1}^*(t) & \text{ if } t_N < t \le T \\
 \end{cases}
 $$
+
+We could just specify how the conditional intensity ... depends on the (arbitrary number of the) past events ... and this will automatically specify all the conditional distributions $$p_i^*$$ for $$i = 1, 2, 3, \dots$$ for any realization $$\bm{t}$$, which is pretty neat!
+
+$$
+\lambda^*(t) = \mu + \sum_{t_j < t} \alpha \exp(-(t - t_j))
+$$
+
+The probability of an event increases by $$\alpha$$ immediately after an event occurence and then exponentially decays returns to the baseline level $$\mu$$.
+Such an intensity function "bursty" event occurrence --- events often happen in quick succession.
 
 
 
@@ -130,53 +158,6 @@ In this series of blog posts I will try to summarize what I learned ...  -->
 - Conditional intensity is one of many equivalent ways to specify a distribution over the event times.
 - Conditional intensity allows us to easily define distributions with properties such as global trend or burstiness. -->
 
-### Why do we need TPPs?
-The most obvious use-case for such models is prediction and forecasting ("When will the next event occur?", "How many orders will we receive next week?"), but other applications are possible, such as anomaly detection ("Does activity of this user deviate from her normal behavior?") and understanding the data ("Do events of type A influence events of type B?").
-
-In this blog post, I will consider a simple scenario (but I will cover the case ... in one of the future posts).
-
-Each event corresponds to an arrival time $t_i$.
-
-Temporal point process (TPP) defines a distribution of such event sequences over some interval $$[0, T]$$.
-
-A realization of a TPP consists of a sequence of increasing arrival times $$0 < t_1 < \dots < t_N < T$$. [We usually assume that our TPPs are *simple*. This means that (1) the number of events $N$ is finite almost surely (=with probability one) and (2) the arrival times $t_i$ are distinct, i.e. $t_i \ne t_j$ for all $i\ne j$.]
-
-The key property of TPPs is that both the number of events $N$ as well their arrival times $t_i$ are random.
-
-we can represent ... simply as a sequence of arrival times. 
-
-A natural way to define a distribution over event sequences $(t_1, t_2, t_3, ...)$ is by specifying the conditional distributions $p_1(t_1), p_2(t_2 | t_1), p_3(t_3 | t_1, t_2), \dots$. 
-
-Given 
-
-```python
-t = 0
-arrival_times = []
-while t < T:
-	t ~ p_i(t_i | t_1, ..., t_{i-1})
-	if t < T:
-		arrival_times.append(t)
-```
-
-[Remember, 
-
-It's important to remember that depending on the time of the first event $t_1$, we get different conditional distributions $p_2(t_2|t_1)$.
-
-Fig: Some TPP realization on interval [0, T].
-
-There exist two ways to look at this problem - machine learning view (autoregressive probabilistic models) and 
-
-### TPP as an autoregressive model
-
-- PDF, CDF and survival function
-- From conditional PDF to the conditional hazard function
-- Stitching together the hazard functions to obtain the conditional intensity
-- Intensity simply as an alternative to the conditional PDFs
-
-Difference between intensity and PDF:
-
-- PDF: I am not at t_{i-1}, what is the probability that the next event will happen in [t + dt)?
-- Survival: I have already got up to t and the event hasn't happened yet. What is the probability that I will see it in [t + dt)?
 
 ### TPP as a counting process
 
@@ -211,11 +192,9 @@ In the next blog post, I will discuss the many ...  -->
 - A tutorial on Hawkes processes by Caner Turkmen [https://hawkeslib.readthedocs.io/en/latest/tutorial.html](https://hawkeslib.readthedocs.io/en/latest/tutorial.html)
 
 
-Text and some other stuff [^1]
-and a bit more
 
+[^1]: Some technicalities: We usually assume that our TPPs are *simple*. This means that (1) the number of events $$N$$ is finite almost surely (=with probability one) and (2) the arrival times $$t_i$$ are distinct, i.e. $$t_i \ne t_j$$ for all $$i\ne j$$. Additionally, we assume that $$t_i$$'s are continuous random variables. Among other things, this means that $$\Pr(t_i \in [a, b]) = \Pr(t_i \in (a, b))$$, i.e., we shouldn't worry about the interval boundaries too much.
 
-[^1]: Hello world
 
 <details>
 <summary>This list is hidden</summary>
