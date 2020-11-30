@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Temporal Point Processes 1: The Conditional Intensity Function"
-subtitle: "How can we define generative models for variable-length event sequences?"
+subtitle: "How can we define generative models for variable-length event sequences in continuous time?"
 date: 2020-09-01 09:00:00 +0200
 background: '/img/posts/1.jpg'
 ---
@@ -100,8 +100,9 @@ Put differently, given one of these functions, we can easily compute the other t
 In point process literature, we usually consider the hazard function $$h_i^*$$.
 This happens for traditional reasons, but also because hazard functions are often more interpretable and easier to describe when talking about popular simple models.
 
-An extremely important observation
 
+
+Instead of specifying all the hazard functions ... we can stitch them together
 
 In general, for any value of $$t_1$$, the hazard function $$h_2^*$$ can look completely differently.
 Therefore, it only makes sense 
