@@ -28,13 +28,17 @@ Depending on the choice of the space $$\mathcal{X}$$, we distinguish among diffe
 For example, $$\mathcal{X} \subseteq \mathbb{R}^D$$ corresponds to a so-called *spatial point process*, where every point $$\bm{x}_i$$ can be viewed as a random location in space (e.g., a location of a disease outbreak).
 
 
-Figure: Two realizations of a spatial point process on $$\mathbb{R}^2$$.
+<img src="/img/posts/tpp1/spp_sample.png" width="100%">
+*Figure: Two realizations of a spatial point process on $$\mathbb{R}^2$$.*
+{: style="text-align: center;"}
 
 
 Another important case, to which I will dedicate the rest of this post (and, hopefully, several future ones), are *temporal point processes* (TPPs), defined on the real half-line $$\mathcal{X} \subseteq [0, \infty)$$.
 We can interpret the points in a TPP as events happening in continuous time, and therefore usually denote them as $$t_i$$ (instead of $$\bm{x}_i$$).
 
-Figure: Two realizations of a temporal point process on $$[0, T]$$.
+<img src="/img/posts/tpp1/tpp_sample.png" width="100%">
+*Figure: Two realizations of a temporal point process on $$[0, T]$$.*
+{: style="text-align: center;"}
 
 At first it might seem like TPPs are just a (boring) special case of spatial point processes, but this is not true.
 Because of the ordered structure of the set $$[0, \infty)$$, we can treat TPP realizations (i.e., sets $$\{t_1, \dots, t_N\}$$) as ordered sequences $$\bm{t} = (t_1, \dots, t_N)$$, where $$t_1 < t_2 < \dots < t_N$$.
@@ -56,7 +60,7 @@ We will now look at it from two angles (autoregressive view vs. counting process
 How do we define a probabilistic model that generates variable-length event sequences $$\bm{t} = (t_1, \dots, t_N)$$[^1] in the interval $$[0, T]$$? 
 Thanks to the inherent ordering on the events, we could define our model autoregressively.
 We start by sampling $$t_1$$, the time of the first event, from some probability distribution $$p_1(t_1)$$ that is supported on $$[0, \infty)$$.
-If $$t_1 > T$$, i.e., our event happened outside of the observed interval, we are done --- our realization $$\bm{t}$$ is just an empty sequence.
+If $$t_1 > T$$, i.e., the event happened outside of the observed interval, we are done --- our realization $$\bm{t}$$ is just an empty sequence.
 Otherwise, we sample the next event $$t_2$$ from the conditional distribution $$p_2(t_2 | t_1)$$ that is supported on $$[t_1, \infty)$$.
 Again, we check if $$t_2 > T$$, and if not, proceed to sample $$t_3$$ from $$p_3(t_3 | t_1, t_2)$$.
 We keep repeating this process until some event $$t_{N+1}$$ falls outside of the observed interval, at which point we stop the process and get our sample consisting of $$N$$ events.
@@ -74,7 +78,9 @@ However, there exist other ways to describe a distribution that might be more us
 For example, the *cumulative distribution function* (CDF) $$F_i^*(t) = \int_0^{t} f_i^*(u) du$$ tells us the probability that the event $$t_i$$ will happen before time $$t$$.
 Closely related is the *survival function* (SF), defined as $$S_i^*(t) = 1 - F_i^*(t)$$, which tells us the probability the event $$t_i$$ will happen *after* time $$t$$. 
 
-Figure: PDF, CDF and SF.
+<img src="/img/posts/tpp1/pdf_cdf_sf.png" width="100%">
+*Figure: Interpretation of the PDF, CDF and SF.*
+{: style="text-align: center;"}
 
 
 Finally, a lesser known option is the *hazard function* $$h_i^*$$ that can be computed as $$h^*_i(t) = f_i^*(t) / S_i^*(t)$$.
@@ -91,8 +97,12 @@ For this, we renormalize the PDF such that it integrates to $$1$$ over the inter
 $$f_i^*(t | t_i > t) = \frac{f_i^*(t)}{\int_t^\infty f_i^*(u) du} =\frac{f_i^*(t)}{S_i^*(t)} =: h_i^*(t)$$
 
 This value of the renormalized PDF exactly corresponds to the hazard function $$h_i^*$$ at time $$t$$.
-The name "hazard function" comes from the field of survival analysis, where the goal is to predict failures in various systems.
+The name "hazard function" comes from the field of [survival analysis](https://web.stanford.edu/~lutian/coursepdf/unit1.pdf), where the goal is to predict failures in various systems.
 If $$t_i$$ is the failure time, the quantity $$h_i^*(t)dt$$ corresponds to the probability of a failure --- a hazardous event --- in the immediate future.
+
+<img src="/img/posts/tpp1/pdf_cdf_sf_hazard.png" width="100%">
+*Figure: Four ways to represent the conditional distribution $$p_i^*(t)$$.*
+{: style="text-align: center;"}
 
 Let's get back to our problem of characterizing the conditional distributions of a TPP.
 We could specify any of the functions $$f_i^*$$, $$F_i^*$$, $$S_i^*$$ or $$h_i^*$$ (subject to the respective constraints), and each one of them would completely describe the distribution $$p_i^*$$.
@@ -129,9 +139,40 @@ $$
 
 We could just specify how the conditional intensity ... depends on the (arbitrary number of the) past events ... and this will automatically specify all the conditional distributions $$p_i^*$$ for $$i = 1, 2, 3, \dots$$ for any realization $$\bm{t}$$, which is pretty neat!
 
+
+There is not just a single conditional distribution $$p_i^*$$ --- for 
+
+
+<!-- Let's consider two examples to understand this concept better.
+
+First, suppose that we know that all the conditional densities $$f_i^*(t)$$ 
+
+... Weibull distribution
+
+(known as a *Renewal Process*)
+
+The PDF of the Weibull distribution looks somewhat complicated
+
+$$f(t) = bk (t - t_i)^{k-1} \exp(-b(t - t_i)^k),$$
+
+where $$b$$ and $$k$$ are some positive parameters.
+We can equivalently represent the Weibull distribution by its hazard function
+
+$$h(t) = bk (t - t_i)^{k-1}$$
+
+By stitching the hazard functions, we can write down the conditional intensity as 
+
+$$\lambda^*(t) = bk (t - t_i)^{k-1}$$ -->
+
+In many cases, we can compactly write down the conditional intensity function.
+If we want, we can easily obtain the PDFs $$f_i^*$$ of the conditional distributions $$p_i^*$$.
+
+
 $$
 \lambda^*(t) = \mu + \sum_{t_j < t} \alpha \exp(-(t - t_j))
 $$
+
+
 
 The probability of an event increases by $$\alpha$$ immediately after an event occurence and then exponentially decays returns to the baseline level $$\mu$$.
 Such an intensity function "bursty" event occurrence --- events often happen in quick succession.
@@ -194,12 +235,10 @@ In the next blog post, I will discuss the many ...  -->
 
 
 
-[^1]: Some technicalities: We usually assume that our TPPs are *simple*. This means that (1) the number of events $$N$$ is finite almost surely (=with probability one) and (2) the arrival times $$t_i$$ are distinct, i.e. $$t_i \ne t_j$$ for all $$i\ne j$$. Additionally, we assume that $$t_i$$'s are continuous random variables. Among other things, this means that $$\Pr(t_i \in [a, b]) = \Pr(t_i \in (a, b))$$, i.e., we shouldn't worry about the interval boundaries too much.
+[^1]: Some technicalities: We usually assume that our TPPs are *simple*. This means that (1) the number of events $$N$$ is finite almost surely (=with probability one) and (2) the arrival times $$t_i$$ are distinct, i.e. $$t_i \ne t_j$$ for all $$i\ne j$$. Additionally, we assume that $$t_i$$'s are continuous random variables. This means, among other things, that $$\Pr(t_i \in [a, b]) = \Pr(t_i \in (a, b))$$, i.e., we shouldn't worry about the interval boundaries too much.
 
 
 <details>
 <summary>This list is hidden</summary>
 What happens here?
 </details>
-
-
