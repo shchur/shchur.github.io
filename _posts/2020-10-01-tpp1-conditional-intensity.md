@@ -44,13 +44,17 @@ At first it might seem like TPPs are just a (boring) special case of spatial poi
 Because of the ordered structure of the set $$[0, \infty)$$, we can treat TPP realizations (i.e., sets $$\{t_1, \dots, t_N\}$$) as ordered sequences $$\bm{t} = (t_1, \dots, t_N)$$, where $$t_1 < t_2 < \dots < t_N$$.
 Additionally, we typically assume that the arrival time of the event $$t_i$$ is only influenced by the events that happened in the past.
 As we will see in the next section, this makes specifying TPP distributions rather easy.
-In contrast, spatial point processes don't permit such ordering on the events and because of this often have intractable densities.
+In contrast, spatial point processes don't permit such ordering on the events, and because of this often have intractable densities.
 
 
 The theory of temporal point processes was mostly developed near the middle of the 20th century, taking roots in measure theory and stochastic processes.
 For this reason, the notation and jargon used in TPP literature may sound strange and unfamiliar to people with a machine learning background (at least it did to me).
 In reality, though, most TPP-related concepts can be easily translated into the familiar language of probabilistic machine learning.
 In the rest of this post I will talk about these two viewpoints and show that they are equivalent.
+
+The first question that we need to answer "How can we describe a TPP distribution?".
+By far the most popular approach that you will find in virtually every TPP paper or textbook is to use the *conditional intensity function*, commonly denoted as $$\lambda^*(t)$$.
+
 
 The fundamental concept that you will find in virtually every TPP paper or textbook is the *conditional intensity function*, commonly denoted as $$\lambda^*(t)$$.
 We will now look at it from two angles (autoregressive view vs. counting process view) and see how the conditional intensity allows us to specify TPP distributions.
@@ -97,8 +101,9 @@ For this, we renormalize the PDF such that it integrates to $$1$$ over the inter
 $$f_i^*(t | t_i > t) = \frac{f_i^*(t)}{\int_t^\infty f_i^*(u) du} =\frac{f_i^*(t)}{S_i^*(t)} =: h_i^*(t)$$
 
 This value of the renormalized PDF exactly corresponds to the hazard function $$h_i^*$$ at time $$t$$.
-The name "hazard function" comes from the field of [survival analysis](https://web.stanford.edu/~lutian/coursepdf/unit1.pdf), where the goal is to predict failures in various systems.
-If $$t_i$$ is the failure time, the quantity $$h_i^*(t)dt$$ corresponds to the probability of a failure --- a hazardous event --- in the immediate future.
+The name "hazard function" comes from the field of [survival analysis](https://web.stanford.edu/~lutian/coursepdf/unit1.pdf), where the goal is to predict hazardous events such as death of a patient or failure of some system.
+In such a setting, the hazard function $$h_i^*$$ is often considered to be more interpretable[^2] than the PDF $$f_i^*$$.
+For example, if a system hasn't failed by time $$t_i$$, the quantity $$h_i^*(t)dt$$ corresponds to the probability of failure in the immediate future, which can be useful when planning treatments or allocating resources.
 
 <img src="/img/posts/tpp1/pdf_cdf_sf_hazard.png" width="100%">
 *Figure: Four ways to represent the conditional distribution $$p_i^*(t)$$.*
@@ -107,25 +112,19 @@ If $$t_i$$ is the failure time, the quantity $$h_i^*(t)dt$$ corresponds to the p
 Let's get back to our problem of characterizing the conditional distributions of a TPP.
 We could specify any of the functions $$f_i^*$$, $$F_i^*$$, $$S_i^*$$ or $$h_i^*$$ (subject to the respective constraints), and each one of them would completely describe the distribution $$p_i^*$$.
 Put differently, given one of these functions, we can easily compute the other three.
-In point process literature, we usually consider the hazard function $$h_i^*$$.
-This happens for traditional reasons, but also because hazard functions are often more interpretable and easier to describe when talking about popular simple models.
 
+<details>
+<summary>Computing the different functions from each other</summary>
+</details>
 
+<!-- In point process literature, we usually consider the hazard function $$h_i^*$$.
+This happens for traditional reasons, but also because hazard functions are often more interpretable and easier to describe when talking about popular simple models. -->
 
-Instead of specifying all the hazard functions ... we can stitch them together
-
-In general, for any value of $$t_1$$, the hazard function $$h_2^*$$ can look completely differently.
-Therefore, it only makes sense 
-
-
-
-
-
-
-Let's say we want to compute the likelihood of some realization $$\bm{t} = (t_1, \dots, t_N)$$.
-
-
-We obtain the *conditional intensity function* by stitching together the hazard functions $$h_i^*$$ of all the distributions.
+This means, to define the full distribution of some TPP, we could, for instance, specify the conditional PDFs $$\{f_1^*, f_2^*, f_3^*, \dots\}$$
+or, equivalently, the conditional hazard functions $$\{h_1^*, h_2^*, h_3^*, \dots\}$$[^2].
+However, dealing with all the different conditional distributions and their indices can be unwieldy.
+Instead, we could consider yet another way of characterizing the TPP --- using the *conditional intensity function*.
+The conditional intensity, denoted as $$\lambda^*(t)$$, is defined by simply stitching together the conditional hazard functions:
 
 $$
 \lambda^*(t) =
@@ -137,94 +136,74 @@ h_{N+1}^*(t) & \text{ if } t_N < t \le T \\
 \end{cases}
 $$
 
-We could just specify how the conditional intensity ... depends on the (arbitrary number of the) past events ... and this will automatically specify all the conditional distributions $$p_i^*$$ for $$i = 1, 2, 3, \dots$$ for any realization $$\bm{t}$$, which is pretty neat!
+**Figure: Stitching hazard functions**
 
+Let's take a step back and remember what the $$*$$ notation means here.
+When we write $$\lambda^*(t)$$, we actually mean $$\lambda(t | \mathcal{H}_t)$$.
+That is, the conditional intensity function takes as input two arguments: (1) the current time $$t$$ and (2) the set of the preceding events $$\mathcal{H}_t$$ that can be of arbitrary size.
+<!-- Similarly, the conditional hazard function $$h_i^*$$ also always depends on the past events. -->
 
-There is not just a single conditional distribution $$p_i^*$$ --- for 
+We can turn the previous statement around:
+To define a TPP distribution, we simply need to define some non-negative[^2] function that takes as input the time $$t \in [0, T]$$ and a variable-sized set of past events $$\{t_1, \dots, t_{i-1}\}$$.
+This will completely specify the conditional intensity $$\lambda^*(t)$$.
+Given $$\lambda^*(t)$$, we can easily recover the conditional hazard functions $$h_i^*$$.
+Finally, we can obtain the conditional PDFs $$f_i^*$$ from the $$h_i^*$$'s. 
+Thus, we have completely specified our TPP distribution. Neat!
 
+### Defining TPPs using the conditional intensity function
 
-<!-- Let's consider two examples to understand this concept better.
-
-First, suppose that we know that all the conditional densities $$f_i^*(t)$$ 
-
-... Weibull distribution
-
-(known as a *Renewal Process*)
-
-The PDF of the Weibull distribution looks somewhat complicated
-
-$$f(t) = bk (t - t_i)^{k-1} \exp(-b(t - t_i)^k),$$
-
-where $$b$$ and $$k$$ are some positive parameters.
-We can equivalently represent the Weibull distribution by its hazard function
-
-$$h(t) = bk (t - t_i)^{k-1}$$
-
-By stitching the hazard functions, we can write down the conditional intensity as 
-
-$$\lambda^*(t) = bk (t - t_i)^{k-1}$$ -->
-
-In many cases, we can compactly write down the conditional intensity function.
-If we want, we can easily obtain the PDFs $$f_i^*$$ of the conditional distributions $$p_i^*$$.
-
+The main advantage of the conditional intensity is that it allows to compactly represent various TPPs with different behaviors.
+For example, we could define a TPP where the intensity is independent of the history and only depends on the time $$t$$.
 
 $$
-\lambda^*(t) = \mu + \sum_{t_j < t} \alpha \exp(-(t - t_j))
+\lambda(t | \mathcal{H}_t) = g(t)
 $$
 
+This corresponds to the famous [Poisson process](https://www.wikiwand.com/en/Poisson_point_process).
+High values of $$g(t)$$ correspond to a higher rate of event occurrence, so we could use a Poisson process to model global trends.
+The Poisson process has a number of other interesting properties and deserves a blog post of its own.
+
+**Figure: Realizations from a Poisson process**
 
 
-The probability of an event increases by $$\alpha$$ immediately after an event occurence and then exponentially decays returns to the baseline level $$\mu$$.
-Such an intensity function "bursty" event occurrence --- events often happen in quick succession.
+
+Another popular example is the self-exciting process (a.k.a. Hawkes process) with the conditional intensity function
+
+$$
+\lambda(t | \mathcal{H}_t) = \mu + \sum_{\substack{t_j \in \, \mathcal{H}_t\\t_j  < \, t \;\;}} \alpha \exp(-(t - t_j))
+$$
+
+As we see above, the intensity increases by $$\alpha$$ whenever an event occurs and then exponentially decays towards the baseline level $$\mu$$.
+Such an intensity function allows us to capture "bursty" event occurrences --- events often happen in quick succession.
+
+
+**Figure: Realizations from a Hawkes process**
 
 
 
-
-<!-- Most of the theory was developed in the 60s-70s, ... roots in measure theory so the jargon ... might seem very intimidating at first. They had different goals - establishing theoretical foundations. Now we are facing different challenges - we should change the way we think about TPPs... . 
-
-I this first blog post I will ... that I personally find more intuitive.
-
-Might seem intimidating at first, with lots of jargon, but turns out to be ... much more simple
-
-- Loaded with jargon
-- Information is spread across many sources
-- most existing resources either don't go deep enough or require the reader to have a PhD in measure theory.
-
-The goal of this series of blog posts is to show you that 
-
-In this series of blog posts I will try to summarize what I learned ...  -->
-
-<!-- ### TL;DR -->
-
-<!-- - Temporal point processes are basically autoregressive probabilistic models that define the distribution of discrete events in continuous time.
-- Conditional intensity is one of many equivalent ways to specify a distribution over the event times.
-- Conditional intensity allows us to easily define distributions with properties such as global trend or burstiness. -->
 
 
 ### TPP as a counting process
 
-There is another view
+So far, 
+
+
+*counting process*.
+
+
+**Figure: Different representations of an event sequence **
 
 - Intensity as expectation of the counting process
 - Conditional intensity for more general dependencies
 
 Both views are, in fact, equivalent
 
-### Why intensity function?
+### Summary
+Temporal point processes define probability distributions over variable-length event sequences.
+We can view TPPs as autoregressive models.
+Alternatively, a TPP can be represented as a counting process $$\{N(t)\}_{t=0}^{T}$$.
 
-- Easy to specify certain types of dependencies (global trend, self-exciting, self-correcting), especially when we have marks
-- Leads to fast inference and sampling - see Parts 2 & 4
-- Not always they best way to look at things - more in Part 3
-
-Intensity allows to define distributions in a piecewise manner - external event happens and changes 
-
-### Examples of TPP models
-
-- Inhomogeneous Poisson - global trend
-- Hawkes process - self-exciting
-- Self-correcting process
-
-In the next blog post, I will discuss the many ...  -->
+The conditional intensity function $$\lambda^*(t)$$ connects these two viewpoints and allows us to specify temporal point processes with different behaviors.
 
 # References
 
@@ -237,8 +216,4 @@ In the next blog post, I will discuss the many ...  -->
 
 [^1]: Some technicalities: We usually assume that our TPPs are *simple*. This means that (1) the number of events $$N$$ is finite almost surely (=with probability one) and (2) the arrival times $$t_i$$ are distinct, i.e. $$t_i \ne t_j$$ for all $$i\ne j$$. Additionally, we assume that $$t_i$$'s are continuous random variables. This means, among other things, that $$\Pr(t_i \in [a, b]) = \Pr(t_i \in (a, b))$$, i.e., we shouldn't worry about the interval boundaries too much.
 
-
-<details>
-<summary>This list is hidden</summary>
-What happens here?
-</details>
+[^2]: Another footnote.
