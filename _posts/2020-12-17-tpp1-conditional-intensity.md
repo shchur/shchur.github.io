@@ -2,9 +2,11 @@
 layout: post
 comments: true
 title: "Temporal Point Processes 1: The Conditional Intensity Function"
+twitter_title: "Temporal Point Processes 1: The Conditional Intensity Function"
 subtitle: "How can we define generative models for variable-length event sequences in continuous time?"
 date: 2020-12-17 09:00:00 +0200
 background: '/img/posts/1.jpg'
+image: '/img/posts/1.jpg'
 ---
 
 ## TL;DR
