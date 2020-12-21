@@ -10,7 +10,7 @@ image: '/img/posts/1.jpg'
 ---
 
 ## TL;DR
-- *Temporal point processes (TPPs) are probability distribution over variable-length event sequences in continuous time.*
+- *Temporal point processes (TPPs) are probability distributions over variable-length event sequences in continuous time.*
 - *We can view a TPP as an autoregressive model or as a counting process.*
 - *The conditional intensity function $$\lambda^*(t)$$ connects these two viewpoints and allows us to specify TPPs with different behaviors, such as a global trend or burstiness.*
 - *The conditional intensity $$\lambda^*(t)$$ is one of many ways to define a TPP --- as an alternative, we could, for example, specify the conditional PDFs of the arrival times $$\{f_1^*, f_2^*, f_3^*, \dots\}$$.*
