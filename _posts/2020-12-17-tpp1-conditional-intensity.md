@@ -36,7 +36,7 @@ For example, $$\mathcal{X} \subseteq \mathbb{R}^D$$ corresponds to a so-called *
 
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/spp_sample.png" width="90%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/spp_sample.png" width="90%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: Two realizations of a spatial point process on $$\mathbb{R}^2$$.*
 {: style="text-align: center;"}
@@ -46,7 +46,7 @@ Another important case, to which I will dedicate the rest of this post (and, hop
 We can interpret the points in a TPP as events happening in continuous time, and therefore usually denote them as $$t_i$$ (instead of $$\boldsymbol{x}_i$$).
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/tpp_sample.png" width="90%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/tpp_sample.png" width="90%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: Two realizations of a temporal point process on $$[0, T]$$.*
 {: style="text-align: center;"}
@@ -91,7 +91,7 @@ For example, the *cumulative distribution function* (CDF) $$F_i^*(t) = \int_0^{t
 Closely related is the *survival function* (SF), defined as $$S_i^*(t) = 1 - F_i^*(t)$$, which tells us the probability that the event $$t_i$$ will happen *after* time $$t$$. 
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/pdf_cdf_sf.png" width="75%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/pdf_cdf_sf.png" width="75%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: Interpretation of the PDF, CDF and SF. Here $$\mathcal{H}_t = \{t_1, \dots, t_{i-1}\}$$.*
 {: style="text-align: center;"}
@@ -113,7 +113,7 @@ $$f_i^*(t | t_i \ge t) = \frac{f_i^*(t)}{\int_t^\infty f_i^*(u) du} =\frac{f_i^*
 This value of the renormalized PDF exactly corresponds to the hazard function $$h_i^*$$ at time $$t$$ (see next figure --- bottom).
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/renorm_pdf.png" width="75%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/renorm_pdf.png" width="75%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: PDF of $$t_i$$ (top), PDF of $$t_i$$ conditioned on $$t_i \ge t$$ (center), hazard function of $$t_i$$ (bottom).*
 {: style="text-align: center;"}
@@ -150,7 +150,7 @@ Put differently, given one of these functions, we can directly compute the other
 It's worth noting that there exist other functions (besides the four mentioned above) that we could use to describe a probability distribution.
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/pdf_cdf_sf_hazard.png" width="90%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/pdf_cdf_sf_hazard.png" width="90%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: Four ways to represent the conditional distribution $$P_i^*(t)$$.*
 {: style="text-align: center;"}
@@ -174,7 +174,7 @@ $$
 which can graphically be represented as follows:
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/stitching.png" width="75%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/stitching.png" width="75%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: The conditional intensity is obtained by stitching the hazard functions.*
 {: style="text-align: center;"}
@@ -207,7 +207,7 @@ More events (i.e., ticket purchases) happen in the morning and in the evening co
 
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/poisson.png" width="75%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/poisson.png" width="75%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: A realization of a Poisson process (bottom) and the respective intensity function (top).*
 {: style="text-align: center;"}
@@ -228,7 +228,7 @@ For example, if a neuron fires in the brain, it's likely that this neuron will f
 
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/hawkes.png" width="75%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/hawkes.png" width="75%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: A realization of a Hawkes process (bottom) and the respective intensity function (top).*
 {: style="text-align: center;"}
@@ -257,7 +257,7 @@ where $$\mathbb{I}$$ is the indicator function.
 
 
 <div class="row mt-3" >
-<img src="/img/posts/tpp1/counting.png" width="75%" style="margin-left: auto; margin-right: auto;">
+<img src="/img/posts/tpp1/counting.png" width="75%" height="auto" style="margin-left: auto; margin-right: auto;">
 </div>
 *Figure: Realization of a counting process (above) and the respective event sequence (below).*
 {: style="text-align: center;"}
