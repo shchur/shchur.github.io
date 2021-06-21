@@ -8,15 +8,29 @@ comments: true
 authors:
   - name: Oleksandr Shchur
 
-bibliography: 2018-12-22-distill.bib
+redirect_from:
+  - /2020/12/17/tpp1-conditional-intensity.html
 
 ---
 
+<d-contents>
+  <nav class="l-text figcaption">
+  <h3>Contents</h3>
+    <div><a href="#what-is-a-point-process"> What is a point process?</a></div>
+    <div><a href="#tpp-as-an-autoregressive-model">TPP as an autoregressive model</a></div>
+    <div><a href="#defining-tpps-using-the-conditional-intensity-function">Defining TPPs using the conditional intensity function</a></div>
+    <div><a href="#tpp-as-a-counting-process">TPP as a counting process</a></div>
+    <div><a href="#summary">Summary</a></div>
+  </nav>
+</d-contents>
+
 ## TL;DR
-- *Temporal point processes (TPPs) are probability distributions over variable-length event sequences in continuous time.*
-- *We can view a TPP as an autoregressive model or as a counting process.*
-- *The conditional intensity function $$\lambda^*(t)$$ connects these two viewpoints and allows us to specify TPPs with different behaviors, such as a global trend or burstiness.*
-- *The conditional intensity $$\lambda^*(t)$$ is one of many ways to define a TPP --- as an alternative, we could, for example, specify the conditional PDFs of the arrival times $$\{f_1^*, f_2^*, f_3^*, \dots\}$$.*
+<ul >
+  <li style="margin: 5px 0px;"> Temporal point processes (TPPs) are probability distributions over variable-length event sequences in continuous time.</li>
+  <li style="margin: 5px 0px;"> We can view a TPP as an autoregressive model or as a counting process.</li>
+  <li style="margin: 5px 0px;"> The conditional intensity function $\lambda^*(t)$ connects these two viewpoints and allows us to specify TPPs with different behaviors, such as a global trend or burstiness.</li>
+  <li style="margin: 5px 0px;"> The conditional intensity $\lambda^*(t)$ is one of many ways to define a TPP &#8212; as an alternative, we could, for example, specify the conditional PDFs of the arrival times $\{f_1^*, f_2^*, f_3^*, \dots\}$.</li>
+</ul>
 
 ## What is a point process?
 Probabilistic generative models are the bread and butter of modern machine learning.
@@ -28,9 +42,11 @@ We know what to do if $$\boldsymbol{x}$$ is a vector in $$\mathbb{R}^D$$
 But what if a single realization of our probabilistic model corresponds to a *set* of vectors $$\{\boldsymbol{x}_1, ..., \boldsymbol{x}_N\}$$?
 Even worse, what if both $$N$$, the number of the vectors, as well as their locations $$\boldsymbol{x}_i$$ are random?
 This is not some hypothetical scenario --- processes generating such data are abundant in the real world: 
-- Transactions generated each day in a financial system
-- Locations of disease outbreaks in a city, recorded each week
-- Times and locations of earthquakes in some geographic region within a year
+<ul style="margin-top: 0px">
+  <li style="margin: 5px 0px;"> Transactions generated each day in a financial system</li>
+  <li style="margin: 5px 0px;"> Locations of disease outbreaks in a city, recorded each week</li>
+  <li style="margin: 5px 0px;"> Times and locations of earthquakes in some geographic region within a year</li>
+</ul>
 
 Point processes provide a framework for modeling and analyzing such data.
 Each realization of a point process is a set $$\{\boldsymbol{x}_1, \dots, \boldsymbol{x}_N\}$$ consisting of a random number $$N$$ of *points* $$\boldsymbol{x}_i$$ that live in some space $$\mathcal{X}$$, hence the name "point process".
@@ -38,21 +54,25 @@ Depending on the choice of the space $$\mathcal{X}$$, we distinguish among diffe
 For example, $$\mathcal{X} \subseteq \mathbb{R}^D$$ corresponds to a so-called *spatial point process*, where every point $$\boldsymbol{x}_i$$ can be viewed as a random location in space (e.g., a location of a disease outbreak).
 
 
-<div class="l-body" >
-<img src="/assets/img/posts/tpp1/spp_sample.png" width="90%" height="90%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/spp_sample.png" 
+style="display: block; width: 90%; margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+Two realizations of a spatial point process on $\mathbb{R}^2$.
+</figcaption>
 </div>
-*Figure: Two realizations of a spatial point process on $$\mathbb{R}^2$$.*
-{: style="text-align: center;"}
 
 
 Another important case, to which I will dedicate the rest of this post (and, hopefully, several future ones), are *temporal point processes* (TPPs), defined on the real half-line $$\mathcal{X} \subseteq [0, \infty)$$.
 We can interpret the points in a TPP as events happening in continuous time, and therefore usually denote them as $$t_i$$ (instead of $$\boldsymbol{x}_i$$).
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/tpp_sample.png" width="90%" height="90%">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/tpp_sample.png" 
+style="margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+Two realizations of a temporal point process on $[0, T]$.
+</figcaption>
 </div>
-*Figure: Two realizations of a temporal point process on $$[0, T]$$.*
-{: style="text-align: center;"}
 
 At first it might seem like TPPs are just a (boring) special case of spatial point processes, but this is not true.
 Because of the ordered structure of the set $$[0, \infty)$$, we can treat TPP realizations (i.e., sets $$\{t_1, \dots, t_N\}$$) as ordered sequences $$\boldsymbol{t} = (t_1, \dots, t_N)$$, where $$t_1 < t_2 < \dots < t_N$$.
@@ -78,7 +98,7 @@ We start by sampling $$t_1$$, the time of the first event, from some probability
 If $$t_1 > T$$, i.e., the event happened outside of the observed interval, we are done --- our realization $$\boldsymbol{t}$$ is just an empty sequence.
 Otherwise, we sample the next event $$t_2$$ from the conditional distribution $$P_2(t_2 | t_1)$$ that is supported on $$[t_1, \infty)$$.
 Again, we check if $$t_2 > T$$, and if not, proceed to sample $$t_3$$ from $$P_3(t_3 | t_1, t_2)$$.
-We keep repeating this process until some event $$t_{N+1}$$ falls outside of the observed interval, at which point we stop the process and get our sample consisting of $$N$$ events.
+We repeat this process until some event $$t_{N+1}$$ falls outside of the observed interval, at which point we stop the process and get our sample consisting of $$N$$ events.
 
 At each step we are dealing with the conditional distribution of the event $$t_i$$ given the *history* of the past events $$\mathcal{H}_{t_i} = \{t_j: t_j < t_i\}$$.
 We usually denote this distribution as $$P_i(t_i | \mathcal{H}_{t_i})$$. 
@@ -93,12 +113,13 @@ However, there exist other ways to describe a distribution that might be more us
 For example, the *cumulative distribution function* (CDF) $$F_i^*(t) = \int_0^{t} f_i^*(u) du$$ tells us the probability that the event $$t_i$$ will happen before time $$t$$.
 Closely related is the *survival function* (SF), defined as $$S_i^*(t) = 1 - F_i^*(t)$$, which tells us the probability that the event $$t_i$$ will happen *after* time $$t$$. 
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/pdf_cdf_sf.png" width="90%" height="90%">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/pdf_cdf_sf.png" 
+style="display: block; width: max(80%, 200px); margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+Interpretation of the PDF, CDF and SF. Here $\mathcal{H}_t = \{t_1, ..., t_{i-1}\}$.
+</figcaption>
 </div>
-*Figure: Interpretation of the PDF, CDF and SF. Here $$\mathcal{H}_t = \{t_1, \dots, t_{i-1}\}$$.*
-{: style="text-align: center;"}
-
 
 Finally, a lesser known option is the [*hazard function*](https://en.wikipedia.org/wiki/Failure_rate) $$h_i^*$$ that can be computed as $$h^*_i(t) = f_i^*(t) / S_i^*(t)$$.
 The value $$h_i^*(t)dt$$ answers the question "What is the probability that the event $$t_i$$ will happen in the interval $$[t, t + dt)$$ given that it didn't happen before $$t$$?".
@@ -115,11 +136,13 @@ $$f_i^*(t | t_i \ge t) = \frac{f_i^*(t)}{\int_t^\infty f_i^*(u) du} =\frac{f_i^*
 
 This value of the renormalized PDF exactly corresponds to the hazard function $$h_i^*$$ at time $$t$$ (see next figure --- bottom).
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/renorm_pdf.png" width="75%" height="75%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/renorm_pdf.png" 
+style="display: block; width: max(80%, 200px); margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+PDF of $t_i$ (top), PDF of $t_i$ conditioned on $t_i \ge t$ (center), hazard function of $t_i$ (bottom).
+</figcaption>
 </div>
-*Figure: PDF of $$t_i$$ (top), PDF of $$t_i$$ conditioned on $$t_i \ge t$$ (center), hazard function of $$t_i$$ (bottom).*
-{: style="text-align: center;"}
 
 We can also go in the other direction and compute the PDF $$f_i^*$$ using $$h_i^*$$.
 First, we need to compute the survival function
@@ -150,13 +173,14 @@ This quantity can be of interest when planning treatments or allocating resource
 Let's get back to our problem of characterizing the conditional distributions of a TPP.
 We could specify any of the functions $$f_i^*$$, $$F_i^*$$, $$S_i^*$$ or $$h_i^*$$ (subject to the respective constraints<d-footnote>Constraints on PDF, CDF, SF and hazard function are necessary to ensure that they define a valid probability distribution. For example, a PDF $f_i^*$ must satisfy $f_i^*(t) \ge 0$ for all $t$ and $\int_{t_{i-1}}^\infty f_i^*(u) du = 1$. Similarly, a valid hazard function $h_i^*$ must satisfy $h_i^*(t) \ge 0$ for all $t$ and $\int_{t}^{\infty} h_i^*(u) du = \infty$ for all $t$.</d-footnote>), and each one of them would completely describe the distribution $$P_i^*$$.
 Put differently, given one of these functions, we can directly compute the other three.
-It's worth noting that there exist other functions (besides the four mentioned above) that we could use to describe a probability distribution.
+It's worth noting that there exist other functions (besides the four mentioned above) that we could use to describe a distribution.
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/pdf_cdf_sf_hazard.png" width="90%" height="90%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/pdf_cdf_sf_hazard.png" />
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+Four ways to represent the conditional distribution $P_i^*(t)$: probability density function $f_i^*$, cumulative distribution function $F_i^*$, survival function $S_i^*$, and hazard function $h_i^*$.
+</figcaption>
 </div>
-*Figure: Four ways to represent the conditional distribution $$P_i^*(t)$$.*
-{: style="text-align: center;"}
 
 In summary, to define the full distribution of some TPP, we could, for instance, specify the conditional PDFs $$\{f_1^*, f_2^*, f_3^*, \dots\}$$
 or, equivalently, the conditional hazard functions $$\{h_1^*, h_2^*, h_3^*, \dots\}$$.
@@ -176,11 +200,13 @@ $$
 
 which can graphically be represented as follows:
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/stitching.png" width="85%" height="85%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/stitching.png" 
+style="display: block; width: max(80%, 200px); margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+The conditional intensity $\lambda^*(t)$ is obtained by stitching together the hazard functions $h_i^*(t)$.
+</figcaption>
 </div>
-*Figure: The conditional intensity is obtained by stitching the hazard functions.*
-{: style="text-align: center;"}
 
 Let's take a step back and remember what the $$*$$ notation means here.
 When we write $$\lambda^*(t)$$, we actually mean $$\lambda(t | \mathcal{H}_t)$$.
@@ -209,14 +235,14 @@ For instance, we could use it to model passenger traffic in a subway network wit
 More events (i.e., ticket purchases) happen in the morning and in the evening compared to the middle of the day, which is reflected by the variations in the intensity $$g(t)$$.
 
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/poisson.png" width="75%" height="75%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/poisson.png" 
+style="display: block; width: max(80%, 200px); margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+A realization of a Poisson process (bottom) and the respective intensity function (top).
+</figcaption>
 </div>
-*Figure: A realization of a Poisson process (bottom) and the respective intensity function (top).*
-{: style="text-align: center;"}
-
 The Poisson process has a number of other interesting properties and probably deserves a blog post of its own.
-
 
 
 Another popular example is the [self-exciting process (a.k.a. Hawkes process)](https://arxiv.org/abs/1708.06401) with the conditional intensity function
@@ -230,12 +256,13 @@ Such an intensity function allows us to capture "bursty" event occurrences --- e
 For example, if a neuron fires in the brain, it's likely that this neuron will fire again in the near future.
 
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/hawkes.png" width="75%" height="75%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/hawkes.png" 
+style="display: block; width: max(80%, 200px); margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+A realization of a Hawkes process (bottom) and the respective intensity function (top).
+</figcaption>
 </div>
-*Figure: A realization of a Hawkes process (bottom) and the respective intensity function (top).*
-{: style="text-align: center;"}
-
 
 Both of the above examples could equivalently be specified using the conditional PDFs $$f_i^*$$ or the hazard functions $$h_i^*$$.
 However, their description in terms of the conditional intensity $$\lambda^*(t)$$ is more elegant and compact --- we don't have to worry about the indices $$i$$, and we can understand the properties of respective TPPs (such as global trend or burstiness) by simply looking at the definition of $$\lambda^*(t)$$.
@@ -246,7 +273,7 @@ However, their description in terms of the conditional intensity $$\lambda^*(t)$
 
 So far, we have represented TPP realizations as variable-length sequences, but this is not the only possible option. 
 In many textbooks and (especially older) papers a TPP is defined as a *counting process* <d-footnote>A counting process is a special type of stochastic processes. A <a href="https://en.wikipedia.org/wiki/Stochastic_process">stochastic process</a> is a collection of random variables that are indexed by a real number. In our case, any real number $t \in [0, T]$ corresponds to a random variable $N(t).$</d-footnote> --- a probability distribution over functions.
-Each realization of a counting process is an increasing function $$N: [0, T] \to \mathbb{N}_0$$.
+Each realization of a counting process is an increasing function $$N \colon [0, T] \to \mathbb{N}_0$$.
 We can think of $$N(t)$$ as the number of events that happened before time $$t \in [0, T]$$.
 
 It's easy to see that this formulation is equivalent to the one we used before.
@@ -259,14 +286,13 @@ $$
 where $$\mathbb{I}$$ is the indicator function.
 
 
-<div class="row mt-3" >
-<img src="/assets/img/posts/tpp1/counting.png" width="75%" height="75%" style="margin-left: auto; margin-right: auto;">
+<div class="l-body">
+<img class="img-fluid rounded" src="/assets/img/posts/tpp1/counting.png"
+style="display: block; width: max(80%, 200px); margin-left: auto; margin-right: auto;"/>
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+Realization of a counting process (above) and the respective event sequence (below).
+</figcaption>
 </div>
-*Figure: Realization of a counting process (above) and the respective event sequence (below).*
-{: style="text-align: center;"}
-
-
-
 Last, we will consider is how to characterize the distribution of a counting process.
 Not surprisingly, the conditional intensity function $$\lambda^*(t)$$ that we defined in the previous section will again come up here.
 
@@ -295,21 +321,26 @@ which means, in simple words, that the conditional intensity is the expected num
 ## Summary
 We have uncovered the mystery of the name "temporal point process":
 
-- **Process** --- a TPP can be defined as a counting *process*
-- **Point** --- we can view each TPP realization $$\boldsymbol{t} = (t_1, \dots, t_N)$$ as a set of *"points"*
-- **Temporal** --- we can interpret the "points" $$t_i$$ as arrival *times* of events
+<ul >
+  <li style="margin: 5px 0px;"> <b>Process</b> &#8212; a TPP can be defined as a counting <i>process</i></li>
+  <li style="margin: 5px 0px;"> <b>Point</b> &#8212; we can view each TPP realization $\boldsymbol{t} = (t_1, \dots, t_N)$ as a set of <i>"points"</i></li>
+  <li style="margin: 5px 0px;"> <b>Temporal</b> &#8212; we can interpret the "points" $t_i$ as arrival <i>times</i> of events</li>
+</ul>
 
 We learned about different ways to specify a TPP, such as using the conditional intensity $$\lambda^*(t)$$ or the conditional PDFs $$\{f_1^*, f_2^*, f_3^*, \dots\}$$.
 
 In the next post of this series, I will talk about how we can put this theory to practice and implement neural-network-based TPP models.
 
-## Acknowledgments
+
+### Acknowledgments
 I would like to thank [Johannes Klicpera](https://twitter.com/klicperajo) for his feedback on this post.
 
 
-## References
+### Further reading
 
-- [ICML 2018 tutorial by Manuel Gomez Rodriguez and Isabel Valera](http://learning.mpi-sws.org/tpp-icml18/)
-- [Lecture notes by Jakob Rasmussen](https://arxiv.org/abs/1806.00221)
-- [A tutorial by Marian-Andrei Rizoiu et al.](https://arxiv.org/abs/1708.06401)
-- [A tutorial on Hawkes processes by Caner Turkmen](https://hawkeslib.readthedocs.io/en/latest/tutorial.html)
+<ul >
+  <li style="margin: 5px 0px;"> <a href="http://learning.mpi-sws.org/tpp-icml18/">ICML 2018 tutorial by Manuel Gomez Rodriguez and Isabel Valera</a></li>
+  <li style="margin: 5px 0px;"> <a href="https://arxiv.org/abs/1806.00221">Lecture notes by Jakob Rasmussen</a></li>
+  <li style="margin: 5px 0px;"> <a href="https://arxiv.org/abs/1708.06401">A tutorial by Marian-Andrei Rizoiu et al.</a></li>
+  <li style="margin: 5px 0px;"> <a href="https://hawkeslib.readthedocs.io/en/latest/tutorial.html">A tutorial on Hawkes processes by Caner Turkmen</a></li>
+</ul>

@@ -19,7 +19,7 @@ social: true  # includes social icons at the bottom of the page
 
 I'm a PhD student in machine learning at the Technical University of Munich, where I'm supervised by [Stephan Günnemann](https://www.daml.in.tum.de){:target="\_blank"}.
 
-My current research focuses on temporal point processes (TPP) --- probabilistic models for continuous time event data like user activity on social media or spike trains in neuroscience. I’m interested in both the modeling aspect (*“How do we make TPPs more flexible and scalable?”*) as well as their applications (*“How can we use TPPs to solve real-world problems and understand our data?”*). 
+My current research focuses on temporal point processes (TPP) --- probabilistic models for continuous time event data like user activity on social media or spike trains in neuroscience. I’m interested in both the modeling aspect (*“How do we make TPPs more flexible and scalable?”*) as well as their applications (*“How can we use TPPs to solve real-world problems and better understand our data?”*). 
 
 My broader interests include generative models, deep learning for graphs, time series forecasting and anomaly detection.
 
