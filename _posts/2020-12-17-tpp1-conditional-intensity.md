@@ -25,12 +25,10 @@ redirect_from:
 </d-contents>
 
 ## TL;DR
-<ul >
-  <li style="margin: 5px 0px;"> Temporal point processes (TPPs) are probability distributions over variable-length event sequences in continuous time.</li>
-  <li style="margin: 5px 0px;"> We can view a TPP as an autoregressive model or as a counting process.</li>
-  <li style="margin: 5px 0px;"> The conditional intensity function $\lambda^*(t)$ connects these two viewpoints and allows us to specify TPPs with different behaviors, such as a global trend or burstiness.</li>
-  <li style="margin: 5px 0px;"> The conditional intensity $\lambda^*(t)$ is one of many ways to define a TPP &#8212; as an alternative, we could, for example, specify the conditional PDFs of the arrival times $\{f_1^*, f_2^*, f_3^*, \dots\}$.</li>
-</ul>
+- Temporal point processes (TPPs) are probability distributions over variable-length event sequences in continuous time.
+- We can view a TPP as an autoregressive model or as a counting process.
+- The conditional intensity function $\lambda^*(t)$ connects these two viewpoints and allows us to specify TPPs with different behaviors, such as a global trend or burstiness.
+- The conditional intensity $\lambda^*(t)$ is one of many ways to define a TPP &#8212; as an alternative, we could, for example, specify the conditional PDFs of the arrival times $$\{f_1^*, f_2^*, f_3^*, ...\}$$.
 
 ## What is a point process?
 Probabilistic generative models are the bread and butter of modern machine learning.
@@ -43,9 +41,9 @@ But what if a single realization of our probabilistic model corresponds to a *se
 Even worse, what if both $$N$$, the number of the vectors, as well as their locations $$\boldsymbol{x}_i$$ are random?
 This is not some hypothetical scenario --- processes generating such data are abundant in the real world: 
 <ul style="margin-top: 0px">
-  <li style="margin: 5px 0px;"> Transactions generated each day in a financial system</li>
-  <li style="margin: 5px 0px;"> Locations of disease outbreaks in a city, recorded each week</li>
-  <li style="margin: 5px 0px;"> Times and locations of earthquakes in some geographic region within a year</li>
+  <li> Transactions generated each day in a financial system</li>
+  <li> Locations of disease outbreaks in a city, recorded each week</li>
+  <li> Times and locations of earthquakes in some geographic region within a year</li>
 </ul>
 
 Point processes provide a framework for modeling and analyzing such data.
@@ -321,11 +319,9 @@ which means, in simple words, that the conditional intensity is the expected num
 ## Summary
 We have uncovered the mystery of the name "temporal point process":
 
-<ul >
-  <li style="margin: 5px 0px;"> <b>Process</b> &#8212; a TPP can be defined as a counting <i>process</i></li>
-  <li style="margin: 5px 0px;"> <b>Point</b> &#8212; we can view each TPP realization $\boldsymbol{t} = (t_1, \dots, t_N)$ as a set of <i>"points"</i></li>
-  <li style="margin: 5px 0px;"> <b>Temporal</b> &#8212; we can interpret the "points" $t_i$ as arrival <i>times</i> of events</li>
-</ul>
+- **Process** --- a TPP can be defined as a counting *process*
+- **Point** --- we can view each TPP realization $\boldsymbol{t} = (t_1, \dots, t_N)$ as a set of *"points"*
+- **Temporal** --- we can interpret the "points" $t_i$ as arrival *times* of events
 
 We learned about different ways to specify a TPP, such as using the conditional intensity $$\lambda^*(t)$$ or the conditional PDFs $$\{f_1^*, f_2^*, f_3^*, \dots\}$$.
 
@@ -339,8 +335,8 @@ I would like to thank [Johannes Klicpera](https://twitter.com/klicperajo) for hi
 ### Further reading
 
 <ul >
-  <li style="margin: 5px 0px;"> <a href="http://learning.mpi-sws.org/tpp-icml18/">ICML 2018 tutorial by Manuel Gomez Rodriguez and Isabel Valera</a></li>
-  <li style="margin: 5px 0px;"> <a href="https://arxiv.org/abs/1806.00221">Lecture notes by Jakob Rasmussen</a></li>
-  <li style="margin: 5px 0px;"> <a href="https://arxiv.org/abs/1708.06401">A tutorial by Marian-Andrei Rizoiu et al.</a></li>
-  <li style="margin: 5px 0px;"> <a href="https://hawkeslib.readthedocs.io/en/latest/tutorial.html">A tutorial on Hawkes processes by Caner Turkmen</a></li>
+  <li> <a href="http://learning.mpi-sws.org/tpp-icml18/">ICML 2018 tutorial by Manuel Gomez Rodriguez and Isabel Valera</a></li>
+  <li> <a href="https://arxiv.org/abs/1806.00221">Lecture notes by Jakob Rasmussen</a></li>
+  <li> <a href="https://arxiv.org/abs/1708.06401">A tutorial by Marian-Andrei Rizoiu et al.</a></li>
+  <li> <a href="https://hawkeslib.readthedocs.io/en/latest/tutorial.html">A tutorial on Hawkes processes by Caner Turkmen</a></li>
 </ul>
