@@ -126,8 +126,16 @@
     d-article ul li {
       margin: 5px 0px;
     }
-  
-  
+
+    d-article d-code {
+      font-size: 15px;
+      overflow-y: hidden !important; 
+      overflow-x: auto !important; 
+    }
+
+    /* d-article h2 {
+      color: rgb(62, 62, 62) !important;
+    } */
     </style>
   
   </head>
@@ -188,6 +196,22 @@
       <d-article>
         {{ content }}
       </d-article>
+
+  {% if site.disqus_shortname and page.comments %}
+    <div id="disqus_thread" class="container mt-5">
+    <script type="text/javascript">
+      var disqus_shortname  = '{{ site.disqus_shortname }}';
+      var disqus_identifier = '{{ page.id }}';
+      var disqus_title      = {{ page.title | jsonify }};
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    </div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  {% endif %}
 
       <d-appendix>
         <d-footnote-list></d-footnote-list>

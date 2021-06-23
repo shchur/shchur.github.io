@@ -36,8 +36,8 @@ max_width: 800px
 # Open Graph
 # -----------------------------------------------------------------------------
 # Display links to the page with a preview object on social media.
-serve_og_meta: false # Include Open Graph meta tags in the HTML head
-og_image: # The site-wide (default for all links) Open Graph preview image
+serve_og_meta: true # Include Open Graph meta tags in the HTML head
+og_image: /assets/img/profile_pic.jpg # The site-wide (default for all links) Open Graph preview image
 
 # -----------------------------------------------------------------------------
 # Social integration
@@ -76,7 +76,7 @@ pagination:
   enabled: true
 
 # Comments
-disqus_shortname: shchur # put your disqus shortname
+disqus_shortname: shchur-github-io # put your disqus shortname
 
 # -----------------------------------------------------------------------------
 # Collections

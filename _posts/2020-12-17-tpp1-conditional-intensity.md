@@ -4,6 +4,8 @@ title: "Temporal Point Processes 1: The Conditional Intensity Function"
 description: "How can we define generative models for variable-length event sequences in continuous time?"
 date: 2020-12-17
 comments: true
+og_image: /assets/img/posts/tpp1/twitter_card.jpg
+twitter_title: "Temporal Point Processes 1: The Conditional Intensity Function"
 
 authors:
   - name: Oleksandr Shchur
