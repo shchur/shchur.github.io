@@ -183,7 +183,7 @@ PDF of the Weibull distribution with different values of the parameters $b$ and 
 </figcaption>
 </div>
 
-The Weibull distribution has two strictly posirive parameters $\boldsymbol{\theta} = (b, k)$. The probability density function is computed as
+The Weibull distribution has two strictly positive parameters $\boldsymbol{\theta} = (b, k)$. The probability density function is computed as
 \\[
 f(\tau \vert b, k) = b k \tau^{k-1} \exp(-b \tau^{k})
 \\]
