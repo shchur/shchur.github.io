@@ -6,7 +6,7 @@ description: PhD student in Machine Learning.
 
 profile:
   align: right
-  image: profile_pic.jpg
+  image: profile_pic.webp
   # address: >
   #   <p>555 your office number</p>
   #   <p>123 your address street</p>
