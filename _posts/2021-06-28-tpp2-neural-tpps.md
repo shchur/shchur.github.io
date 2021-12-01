@@ -302,7 +302,7 @@ We combine Equation (3) with the definition of the conditional hazard function $
 
 $$
 \begin{aligned}
-p(\boldsymbol{t}) =& \left(\sum_{i=1}^{N} \log f_i^*(t_i)\right) + \log S_{N+1}^*(T)\\
+\log p(\boldsymbol{t}) =& \left(\sum_{i=1}^{N} \log f_i^*(t_i)\right) + \log S_{N+1}^*(T)\\
 =& \left(\sum_{i=1}^{N} \log h_i^*(t_i) + \log S_i^*(t_i)\right) + \log S_{N+1}^*(T)\\
 =& \sum_{i=1}^{N} \log h_i^*(t_i) + \sum_{i=1}^{N+1} \log S_i^*(t_i),
 \end{aligned}
