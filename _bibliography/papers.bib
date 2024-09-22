@@ -1,115 +1,159 @@
 ---
 ---
 
-@string{aps = {American Physical Society,}}
-
-@book{einstein1920relativity,
-  title={Relativity: the Special and General Theory},
-  author={Einstein, Albert},
-  year={1920},
-  publisher={Methuen & Co Ltd},
-  html={relativity.html}
+@article{ansari2024chronos,
+  title={Chronos: Learning the language of time series},
+  author={Ansari, Abdul Fatir and Stella, Lorenzo and Turkmen, Caner and Zhang, Xiyuan and Mercado, Pedro and Shen, Huibin and Shchur, Oleksandr and Rangapuram, Syama Sundar and Arango, Sebastian Pineda and Kapoor, Shubham and others},
+  year={2024},
+  arxiv={2403.07815},
+  abstract={We introduce Chronos, a simple yet effective framework for pretrained probabilistic time series models. Chronos tokenizes time series values using scaling and quantization into a fixed vocabulary and trains existing transformer-based language model architectures on these tokenized time series via the cross-entropy loss. We pretrained Chronos models based on the T5 family (ranging from 20M to 710M parameters) on a large collection of publicly available datasets, complemented by a synthetic dataset that we generated via Gaussian processes to improve generalization. In a comprehensive benchmark consisting of 42 datasets, and comprising both classical local models and deep learning methods, we show that Chronos models: (a) significantly outperform other methods on datasets that were part of the training corpus; and (b) have comparable and occasionally superior zero-shot performance on new datasets, relative to methods that were trained specifically on them. Our results demonstrate that Chronos models can leverage time series data from diverse domains to improve zero-shot accuracy on unseen forecasting tasks, positioning pretrained models as a viable tool to greatly simplify forecasting pipelines.},
 }
 
-@book{einstein1956investigations,
-  bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation},
-  preview={brownian-motion.gif}
+@article{ludke2023add,
+  title={Add and thin: Diffusion for temporal point processes},
+  author={L{\"u}dke, David and Bilo{\v{s}}, Marin and Shchur, Oleksandr and Lienen, Marten and G{\"u}nnemann, Stephan},
+  journal={Advances in Neural Information Processing Systems},
+  volume={36},
+  pages={56784--56801},
+  year={2023},
+  arxiv={2311.01139},
+  abstract={Autoregressive neural networks within the temporal point process (TPP) framework have become the standard for modeling continuous-time event data. Even though these models can expressively capture event sequences in a one-step-ahead fashion, they are inherently limited for long-term forecasting applications due to the accumulation of errors caused by their sequential nature. To overcome these limitations, we derive ADD-THIN, a principled probabilistic denoising diffusion model for TPPs that operates on entire event sequences. Unlike existing diffusion approaches, ADD-THIN naturally handles data with discrete and continuous components. In experiments on synthetic and real-world datasets, our model matches the state-of-the-art TPP models in density estimation and strongly outperforms them in forecasting.},
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
-  bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers}
+@article{dascher2023using,
+  title={Using deep learning for flexible and scalable earthquake forecasting},
+  author={Dascher-Cousineau, Kelian and Shchur, Oleksandr and Brodsky, Emily E and G{\"u}nnemann, Stephan},
+  journal={Geophysical Research Letters},
+  volume={50},
+  number={17},
+  year={2023},
+  abstract={Seismology is witnessing explosive growth in the diversity and scale of earthquake catalogs. A key motivation for this community effort is that more data should translate into better earthquake forecasts. Such improvements are yet to be seen. Here, we introduce the Recurrent Earthquake foreCAST (RECAST), a deep-learning model based on recent developments in neural temporal point processes. The model enables access to a greater volume and diversity of earthquake observations, overcoming the theoretical and computational limitations of traditional approaches. We benchmark against a temporal Epidemic Type Aftershock Sequence model. Tests on synthetic data suggest that with a modest-sized data set, RECAST accurately models earthquake-like point processes directly from cataloged data. Tests on earthquake catalogs in Southern California indicate improved fit and forecast accuracy compared to our benchmark when the training set is sufficiently long (>$10^4$ events). The basic components in RECAST add flexibility and scalability for earthquake forecasting without sacrificing performance.},
 }
 
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein*†, A. and Podolsky*, B. and Rosen*, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.},
-  location={New Jersey},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  altmetric={248277},
-  dimensions={true},
-  google_scholar_id={qyhmnyLat1gC},
-  video={https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ},
-  additional_info={. *More Information* can be [found here](https://github.com/alshedivat/al-folio/)},
-  annotation={* Example use of superscripts<br>† Albert Einstein},
-  selected={true},
-  inspirehep_id = {3255}
+@inproceedings{shchur2023autogluon,
+  title={AutoGluon--TimeSeries: AutoML for probabilistic time series forecasting},
+  author={Shchur, Oleksandr and Turkmen, Ali Caner and Erickson, Nick and Shen, Huibin and Shirkov, Alexander and Hu, Tony and Wang, Bernie},
+  booktitle={International Conference on Automated Machine Learning},
+  year={2023},
+  arxiv = {2308.05566},
+  abstract = {We introduce AutoGluon-TimeSeries - an open-source AutoML library for probabilistic time series forecasting. Focused on ease of use and robustness, AutoGluon-TimeSeries enables users to generate accurate point and quantile forecasts with just 3 lines of Python code. Built on the design philosophy of AutoGluon, AutoGluon-TimeSeries leverages ensembles of diverse forecasting models to deliver high accuracy within a short training time. AutoGluon-TimeSeries combines both conventional statistical models, machine-learning based forecasting approaches, and ensembling techniques. In our evaluation on 29 benchmark datasets, AutoGluon-TimeSeries demonstrates strong empirical performance, outperforming a range of forecasting methods in terms of both point and quantile forecast accuracy, and often even improving upon the best-in-hindsight combination of prior methods.},
 }
 
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
+@inproceedings{shchur2021detecting,
+  title     = {Detecting Anomalous Event Sequences with Temporal Point Processes},
+  author    = {Shchur, Oleksandr and T{\"u}rkmen, Ali Caner and Januschowski, Tim and Gasthaus, Jan and G{\"u}nnemann, Stephan},
+  booktitle = {Neural Information Processing Systems, {NeurIPS}},
+  year      = {2021},
+  abbr      = {NeurIPS},
+  code      = {https://github.com/shchur/tpp-anomaly-detection},
+  category  = {conference},
+  arxiv     = {2106.04465},
+  abstract  = {Automatically detecting anomalies in event data can provide substantial value in domains such as healthcare, DevOps, and information security. In this paper, we frame the problem of detecting anomalous continuous-time event sequences as out-of-distribution (OoD) detection for temporal point processes (TPPs). First, we show how this problem can be approached using goodness-of-fit (GoF) tests. We then demonstrate the limitations of popular GoF statistics for TPPs and propose a new test that addresses these shortcomings. The proposed method can be combined with various TPP models, such as neural TPPs, and is easy to implement. In our experiments, we show that the proposed statistic excels at both traditional GoF testing, as well as at detecting anomalies in simulated and real-world data.},
 }
 
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.},
-  volume={17},
-  pages={549--560},
-  year={1905}
+@inproceedings{shchur2021neural,
+  title     = {Neural Temporal Point Processes: A Review},
+  author    = {Oleksandr Shchur and Ali Caner T\"{u}rkmen and Tim Januschowski and Stephan G{\"u}nnemann},
+  booktitle = {International Joint Conference on Artificial Intelligence, {IJCAI}},
+  year      = {2021},
+  abbr      = {IJCAI},
+  category  = {conference},
+  arxiv     = {2104.03528},
+  talk      = {https://www.youtube.com/watch?v=J7qH7i0EyfU},
+  abstract  = {Temporal point processes (TPP) are probabilistic generative models for continuous-time event sequences. Neural TPPs combine the fundamental ideas from point process literature with deep learning approaches, thus enabling construction of flexible and efficient models. The topic of neural TPPs has attracted significant attention in the recent years, leading to the development of numerous new architectures and applications for this class of models. In this review paper we aim to consolidate the existing body of knowledge on neural TPPs. Specifically, we focus on important design choices and general principles for defining neural TPP models. Next, we provide an overview of application areas commonly considered in the literature. We conclude this survey with the list of open challenges and important directions for future work in the field of neural TPPs.},
 }
 
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
+
+@inproceedings{shchur2020fast,
+  title     = {Fast and Flexible Temporal Point Processes with Triangular Maps},
+  author    = {Oleksandr Shchur and Nicholas Gao and Marin Bilo{\v{s}} and Stephan G{\"u}nnemann},
+  booktitle = {Neural Information Processing Systems, {NeurIPS}},
+  year      = {2020},
+  abbr      = {NeurIPS},
+  category  = {conference},
+  arxiv     = {2006.12631},
+  code      = {https://github.com/shchur/triangular-tpp},
+  award     = {Oral},
+  abstract  = {Temporal point process (TPP) models combined with recurrent neural networks provide a powerful framework for modeling continuous-time event data. While such models are flexible, they are inherently sequential and therefore cannot benefit from the parallelism of modern hardware. By exploiting the recent developments in the field of normalizing flows, we design TriTPP --- a new class of non-recurrent TPP models, where both sampling and likelihood computation can be done in parallel. TriTPP matches the flexibility of RNN-based methods but permits orders of magnitude faster sampling. This enables us to use the new model for variational inference in continuous-time discrete-state systems. We demonstrate the advantages of the proposed framework on synthetic and real-world datasets.},
 }
 
-@Article{einstein1905photoelectriceffect,
-  bibtex_show={true},
-  abbr={Ann. Phys.},
-  title="{{\"U}ber einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt}",
-  author={Albert Einstein},
-  abstract={This is the abstract text.},
-  journal={Ann. Phys.},
-  volume={322},
-  number={6},
-  pages={132--148},
-  year={1905},
-  doi={10.1002/andp.19053220607},
-  award={Albert Einstein receveid the **Nobel Prize in Physics** 1921 *for his services to Theoretical Physics, and especially for his discovery of the law of the photoelectric effect*},
-  award_name={Nobel Prize}
+@inproceedings{shchur2020intensity,
+  title     = {Intensity-free Learning of Temporal Point Processes},
+  author    = {Oleksandr Shchur* and Marin Bilo{\v{s}}* and Stephan G{\"u}nnemann},
+  booktitle = {International Conference on Learning Representations, {ICLR}},
+  year      = {2020},
+  abbr      = {ICLR},
+  category  = {conference},
+  arxiv     = {1909.12127},
+  code      = {https://github.com/shchur/ifl-tpp},
+  award     = {Spotlight},
+  abstract = {Temporal point processes are the dominant paradigm for modeling sequences of events happening at irregular intervals. The standard way of learning in such models is by estimating the conditional intensity function. However, parameterizing the intensity function usually incurs several trade-offs. We show how to overcome the limitations of intensity-based approaches by directly modeling the conditional distribution of inter-event times. We draw on the literature on normalizing flows to design models that are flexible and efficient. We additionally propose a simple mixture model that matches the flexibility of flow-based models, but also permits sampling and computing moments in closed form. The proposed models achieve state-of-the-art performance in standard prediction tasks and are suitable for novel applications, such as learning sequence embeddings and imputing missing data.},
 }
 
-@book{przibram1967letters,
-  bibtex_show={true},
-  title={Letters on wave mechanics},
-  author={Einstein, Albert and Schrödinger, Erwin and Planck, Max and Lorentz, Hendrik Antoon and Przibram, Karl},
-  year={1967},
-  publisher={Vision},
-  preview={wave-mechanics.gif},
-  abbr={Vision}
+
+@inproceedings{shchur2019overlapping,
+  title     = {Overlapping Community Detection with Graph Neural Networks},
+  author    = {Oleksandr Shchur and Stephan G{\"u}nnemann},
+  booktitle = {Deep Learning for Graphs Workshop, {DLG}},
+  year      = {2020},
+  abbr      = {DLG},
+  category  = {workshop},
+  arxiv     = {1909.12201},
+  code      = {https://github.com/shchur/overlapping-community-detection},
+  abstract  = {Community detection is a fundamental problem in machine learning. While deep learning has shown great promise in many graphrelated tasks, developing neural models for community detection has received surprisingly little attention. The few existing approaches focus on detecting disjoint communities, even though communities in real graphs are well known to be overlapping. We address this shortcoming and propose a graph neural network (GNN) based model for overlapping community detection. Despite its simplicity, our model outperforms the existing baselines by a large margin in the task of community recovery. We establish through an extensive experimental evaluation that the proposed model is effective, scalable and robust to hyperparameter settings. We also perform an ablation study that confirms that GNN is the key ingredient to the power of the proposed model.},
+}
+
+@inproceedings{bojchevski2018netgan,
+  author    = {Aleksandar Bojchevski* and
+               Oleksandr Shchur* and
+               Daniel Z{\"{u}}gner* and
+               Stephan G{\"{u}}nnemann},
+  title     = {{NetGAN}: Generating Graphs via Random Walks},
+  booktitle = {International Conference on Machine Learning, {ICML}},
+  year      = {2018},
+  abstract  = {We propose NetGAN -- the first implicit generative model for graphs able to mimic real-world networks. We pose the problem of graph generation as learning the distribution of biased random walks over the input graph. The proposed model is based on a stochastic neural network that generates discrete output samples and is trained using the Wasserstein GAN objective. NetGAN is able to produce graphs that exhibit well-known network patterns without explicitly specifying them in the model definition. At the same time, our model exhibits strong generalization properties, as highlighted by its competitive link prediction performance, despite not being trained specifically for this task. Being the first approach to combine both of these desirable properties, NetGAN opens exciting avenues for further research.},
+  abbr      = {ICML},
+  category  = {conference},
+  arxiv     = {1803.00816},
+  code      = {https://github.com/danielzuegner/netgan},
+  award     = {Long oral},
+}
+
+@inproceedings{shchur2018pitfalls,
+  title     = {Pitfalls of Graph Neural Network Evaluation},
+  author    = {Oleksandr Shchur* and Maximilian Mumme* and Aleksandar Bojchevski and Stephan G{\"u}nnemann},
+  booktitle = {Relational Representation Learning Workshop, R2L},
+  year      = {2018},
+  abstract  = {Semi-supervised node classification in graphs is a fundamental problem in graph mining, and the recently proposed graph neural networks (GNNs) have achieved unparalleled results on this task. Due to their massive success, GNNs have attracted a lot of attention, and many novel architectures have been put forward. In this paper we show that existing evaluation strategies for GNN models have serious shortcomings. We show that using the same train/validation/test splits of the same datasets, as well as making significant changes to the training procedure (e.g. early stopping criteria) precludes a fair comparison of different architectures. We perform a thorough empirical evaluation of four prominent GNN models and show that considering different splits of the data leads to dramatically different rankings of models. Even more importantly, our findings suggest that simpler GNN architectures are able to outperform the more sophisticated ones if the hyperparameters and the training procedure are tuned fairly for all models.},
+  abbr      = {R2L},
+  category  = {workshop},
+  arxiv     = {1811.05868},
+  code      = {https://github.com/shchur/gnn-benchmark}
+}
+
+
+@inproceedings{monti2018dual,
+  title     = {Dual-primal Graph Convolutional Networks},
+  author    = {Monti, Federico and Shchur, Oleksandr and Bojchevski, Aleksandar and Litany, Or and G{\"u}nnemann, Stephan and Bronstein, Michael M},
+  booktitle = {Graph Embedding and Mining Workshop, {GEM}},
+  year      = {2019},
+  abstract  = {In recent years, there has been a surge of interest in developing deep learning methods for non-Euclidean structured data such as graphs. In this paper, we propose Dual-Primal Graph CNN, a graph convolutional architecture that alternates convolution-like operations on the graph and its dual. Our approach allows to learn both vertex- and edge features and generalizes the previous graph attention (GAT) model. We provide extensive experimental validation showing state-of-the-art results on a variety of tasks tested on established graph benchmarks, including CORA and Citeseer citation networks as well as MovieLens, Flixter, Douban and Yahoo Music graph-guided recommender systems.},
+  abbr      = {GEM},
+  category  = {workshop},
+  arxiv     = {1806.00770}
+}
+
+}@inproceedings{shchur2018anomaly,
+  author    = {Oleksandr Shchur and
+               Aleksandar Bojchevski and
+               Mohamed Farghal and
+               Stephan G{\"{u}}nnemann and
+               Yusuf Saber},
+  title     = {Anomaly Detection in Car-Booking Graphs},
+  booktitle = {International Conference on Data Mining Workshops, {ICDM}},
+  year      = {2018},
+  abstract  = {The use of car-booking services has gained massive popularity in the recent years -- which led to an increasing number of fraudsters that try to game these systems. In this paper we describe a framework for fraud detection in car-booking systems. Our core idea lies in casting this problem as an instance of anomaly detection in temporal graphs. Specifically, we use unsupervised techniques, such as dense subblock discovery, to detect suspicious activity. The proposed framework is able to adapt to the variations in the data inherent to the car-booking setting, and detects fraud with high precision. This work is performed in collaboration with Careem, where the described framework is currently being deployed in production.},
+  abbr      = {ICDMW},
+  category  = {workshop},
+  html      = {https://ieeexplore.ieee.org/document/8637361}
 }
