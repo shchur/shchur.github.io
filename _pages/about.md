@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle:
+subtitle: Applied Scientist at AWS AI.
 
 profile:
   align: right
@@ -13,7 +13,6 @@ news: true # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
-
 
 I’m an Applied Scientist at AWS AI in Berlin, where I work on [AutoGluon](https://github.com/autogluon/autogluon).
 Currently my research focuses on time series forecasting and AutoML.
