@@ -57,15 +57,16 @@ To do this, at each step $i = 1, 2, 3, ...$ we need to specify the distribution 
 An equivalent but more convenient approach is to instead work with the *inter-event* times $(\tau_1, \dots, \tau_{N+1})$,<d-footnote>Note that we represent an event sequence $(t_1, \dots, t_N)$ with $N$ events using $N+1$ inter-event times. The last inter-event time $\tau_{N+1}$ corresponds to the time from the last event until $T$, the end of the observed time interval.</d-footnote> where we compute $\tau_i = t_i - t_{i-1}$ (assuming $t_0 = 0$ and $t_{N+1} = T$).
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/inter_times.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/inter_times.png"
 style="display: block; width: 80%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
 An event sequence can equivalently be represented by the arrival times $(t_1, \dots, t_N)$ or the inter-event times $(\tau_1, \dots, \tau_{N+1})$.
 </figcaption>
 </div>
 
 First, let's load some data and covnert it into a format that can be processed by our model.
 You can find the dataset and a [Jupyter notebook](https://colab.research.google.com/github/shchur/shchur.github.io/blob/gh-pages/assets/notebooks/tpp2/neural_tpp.ipynb) with all the code used in this blog post [here](https://github.com/shchur/shchur.github.io/blob/gh-pages/assets/notebooks/tpp2/).
+
 <d-code language="python">
 import numpy as np
 import torch
@@ -91,9 +92,9 @@ inter_times = pad_sequence(inter_times_list, batch_first=True)  # (B, L)
 </d-code>
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/preprocess_times.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/preprocess_times.png"
 style="display: block; width: 90%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
 We convert 3 variable-length event sequences of arrival times $\boldsymbol{t}^{(1)}$, $\boldsymbol{t}^{(2)}$, $\boldsymbol{t}^{(3)}$ into a tensor of padded inter-event times of shape <tt>(B, L)</tt>, where <tt>B</tt> - batch size, <tt>L</tt> - padded length.
 </figcaption>
 </div>
@@ -111,9 +112,9 @@ A simple and elegant answer to this question was proposed in the seminal work by
 We will now look at each of these steps in more detail.
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/architecture.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/architecture.png"
 style="display: block; width: 90%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
 Schematic representation of the neural TPP model that we will implement today.
 </figcaption>
 </div>
@@ -132,7 +133,7 @@ In our model, we will simply define $\boldsymbol{y}_j = (\tau_j, \log \tau_j)^T$
 $$
 \boldsymbol{c}_{i+1} = \operatorname{Update}(\boldsymbol{c}_i, \boldsymbol{y}_{i}).
 $$
-The specific RNN architecture is not very important here &#8212; <a target="_blank" href="https://pytorch.org/docs/stable/generated/torch.nn.RNN.html">vanilla RNN</a>, 
+The specific RNN architecture is not very important here &#8212; <a target="_blank" href="https://pytorch.org/docs/stable/generated/torch.nn.RNN.html">vanilla RNN</a>,
 <a target="_blank" href="https://pytorch.org/docs/stable/generated/torch.nn.GRU.html">GRU</a> or
 <a target="_blank" href="https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html">LSTM</a> update functions can all be used here.
 By processing the entire sequence $(t_1, \dots, t_N)$, we compute all the context vectors $(\boldsymbol{c}_1, \dots, \boldsymbol{c}_{N+1})$.
@@ -162,9 +163,9 @@ def get_context(inter_times):
 
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/padding.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/padding.png"
 style="display: block; width: 90%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
 We shift the <tt>rnn_output</tt> by one and add padding to obtain the <tt>context</tt> tensor that is properly aligned with the <tt>inter_times</tt>.
 </figcaption>
 </div>
@@ -176,9 +177,9 @@ For some applications, it's also nice to able to sample from the distribution an
 I decided to use <a target="_blank" href="https://en.wikipedia.org/wiki/Weibull_distribution#Alternative_parameterizations">Weibull distribution</a> here as it satisfies all these properties.<d-footnote>Many other distributions over $[0, \infty)$ also satisfy these properties (e.g., exponential, log-normal, log-logistic, Gompertz distributions, or their mixtures), but some don't. For example, computing the survival function and sampling are not straightforward for the gamma distribution.</d-footnote>
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/weibull.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/weibull.png"
 style="display: block; width: 100%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
 PDF of the Weibull distribution with different values of the parameters $b$ and $k$.
 </figcaption>
 </div>
@@ -200,14 +201,14 @@ class Weibull:
         self.b = b
         self.k = k
         self.eps = eps
-    
+
     def log_prob(self, x):
         """Logarithm of the probability density function log(f(x))."""
         # x must have the same shape as self.b and self.k
         x = x.clamp_min(self.eps)  # pow is unstable for inputs close to 0
-        return (self.b.log() + self.k.log() + (self.k - 1) * x.log() 
+        return (self.b.log() + self.k.log() + (self.k - 1) * x.log()
                 + self.b.neg() * torch.pow(x, self.k))
-    
+
     def log_survival(self, x):
         """Logarithm of the survival function log(S(x))."""
         x = x.clamp_min(self.eps)
@@ -256,7 +257,7 @@ p(\{t_1\}) =& \Pr(\text{1st event in $[t_1, t_1 + dt)$})\\ & \times \Pr(\text{2n
 \end{align}
 $$
 
-The equality here follows simply from the definition of the PDF $$f_1^*$$ and the survival function $$S_2^*$$ (as discussed in the [previous post](https://shchur.github.io/blog/2020/tpp1-conditional-intensity/)).<d-footnote>We can make another interesting observation here. When computing the probability in Equation (1), we could also consider the event 
+The equality here follows simply from the definition of the PDF $$f_1^*$$ and the survival function $$S_2^*$$ (as discussed in the [previous post](https://shchur.github.io/blog/2020/tpp1-conditional-intensity/)).<d-footnote>We can make another interesting observation here. When computing the probability in Equation (1), we could also consider the event
 $$
   \{\text{3rd event after $T$} \mid \text{1st event at $t_1$, 2nd event after $T$} \}.
 $$
@@ -280,7 +281,7 @@ $$
 \end{align}
 $$
 
-Lastly, by slightly abusing the notation, we switch back to the inter-event times and obtain 
+Lastly, by slightly abusing the notation, we switch back to the inter-event times and obtain
 
 $$
 \begin{align}
@@ -292,7 +293,7 @@ We will use this formulation of the log-likelihood to train our neural TPP model
 
 It's worth noting that Equation (4) is not the only way to express the log-likelihood of a TPP.
 In the previous post, we talked about different functions characterizing a TPP, such as conditional hazard functions $$\{h_1^*, h_2^*, h_3^*...\}$$ and the conditional intensity function $$\lambda^*(t)$$.
-Many papers and textbooks work with these functions instead. 
+Many papers and textbooks work with these functions instead.
 Click on the arrow below for more details.
 
 <details>
@@ -364,7 +365,7 @@ def nll_loss(inter_times, seq_lengths):
     # seq_lengths: Number of events in each sequence, shape (B,)
     context = get_context(inter_times)  # (B, L, C)
     inter_time_dist = get_inter_time_distribution(context)
-    
+
     log_pdf = inter_time_dist.log_prob(inter_times)  # (B, L)
     # Construct a boolean mask that selects observed events
     arange = torch.arange(inter_times.shape[1], device=seq_lengths.device)
@@ -380,9 +381,9 @@ def nll_loss(inter_times, seq_lengths):
 </d-code>
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/nll_computation.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/nll_computation.png"
 style="display: block; width: 90%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
 Log-likelihood of a sequence $(\tau_1, ..., \tau_{N+1})$ is computed as $\left(\sum_{i=1}^{N} \log f^*_i(\tau_i)\right) + \log S_{N+1}^*(\tau_{N+1})$.
 In the above figure this corresponds to summing up the orange entries in each row.
 </figcaption>
@@ -410,15 +411,15 @@ for epoch in range(max_epochs):
 
 There are different ways to evaluate TPP models.
 Here, I chose to visualize some properties of the event sequences generated by the model and compare them to those of the training data.
-The code for sampling is not particularly interesting. 
+The code for sampling is not particularly interesting.
 It follows the same logic as before --- at each step $i$, we sample the next inter-event time $\tau_i \sim f_i^*(\tau_i)$, feed it into the RNN to obtain the next context embedding $\boldsymbol{c}_{i+1}$, and repeat the procedure.
 See the [Jupyter notebook](https://colab.research.google.com/github/shchur/shchur.github.io/blob/gh-pages/assets/notebooks/tpp2/neural_tpp.ipynb) for details.
 
 <div class="l-body">
-<img class="img-fluid rounded" src="/assets/img/posts/tpp2/visualize_results.png" 
+<img class="img-fluid rounded" src="/assets/img/posts/tpp2/visualize_results.png"
 style="display: block; width: 100%; margin-left: auto; margin-right: auto;"/>
-<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;"> 
-Comparison of real and generated event sequences. 
+<figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
+Comparison of real and generated event sequences.
 <br>
 <b>Left:</b> Visualization of the arrival times in 10 real (top) and 10 simulated (bottom) sequences.
 <br>
@@ -435,7 +436,7 @@ Of course, there is room for improvement. After all, we defined a really simple 
 ## Concluding remarks
 
 In this post, we have learned about the general design principles of neural TPPs and implemented a simple model of this class.
-Unlike traditional TPP models that we discussed in the previous post (Poisson processes, Hawkes processes), neural TPPs can simultaneously capture different patterns in the data (e.g., global trends, burstiness, repeating subsequences). 
+Unlike traditional TPP models that we discussed in the previous post (Poisson processes, Hawkes processes), neural TPPs can simultaneously capture different patterns in the data (e.g., global trends, burstiness, repeating subsequences).
 
 Neural TPPs are a hot research topic, and a number of improvements have been proposed in the last couple of years.
 For example, one can use a transformer as the history encoder <d-cite key="zhang2020self,zuo2020transformer"></d-cite>, or choose a more flexible parametrization of the conditional distribution <d-cite key="omi2019fully,shchur2020intensity,zhang2020cause"></d-cite>.
